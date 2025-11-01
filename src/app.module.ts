@@ -11,8 +11,8 @@ import { GroupsModule } from './app/modules/groups/groups.module';
 import { UnitsModule } from './app/modules/units/units.module';
 import { LessonsModule } from './app/modules/lessons/lessons.module';
 import { InvitationCodesModule } from './app/modules/invitation-codes/invitation-codes.module';
-import { HistoryInvitationsNoSpecModule } from './app/modules/history-invitations--no-spec/history-invitations--no-spec.module';
 import { HistoryInvitationsModule } from './app/modules/history-invitations/history-invitations.module';
+import { FeatureFlagsModule } from './app/modules/feature-flags/feature-flags.module';
 
 @Module({
   imports: [
@@ -26,8 +26,8 @@ import { HistoryInvitationsModule } from './app/modules/history-invitations/hist
     UnitsModule,
     LessonsModule,
     InvitationCodesModule,
-    HistoryInvitationsNoSpecModule,
     HistoryInvitationsModule,
+    FeatureFlagsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

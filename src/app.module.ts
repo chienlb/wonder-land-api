@@ -9,6 +9,10 @@ import { SchoolsModule } from './app/modules/schools/schools.module';
 import { ClassesModule } from './app/modules/classes/classes.module';
 import { GroupsModule } from './app/modules/groups/groups.module';
 import { UnitsModule } from './app/modules/units/units.module';
+import { LessonsModule } from './app/modules/lessons/lessons.module';
+import { InvitationCodesModule } from './app/modules/invitation-codes/invitation-codes.module';
+import { HistoryInvitationsNoSpecModule } from './app/modules/history-invitations--no-spec/history-invitations--no-spec.module';
+import { HistoryInvitationsModule } from './app/modules/history-invitations/history-invitations.module';
 
 @Module({
   imports: [
@@ -20,6 +24,10 @@ import { UnitsModule } from './app/modules/units/units.module';
     ClassesModule,
     GroupsModule,
     UnitsModule,
+    LessonsModule,
+    InvitationCodesModule,
+    HistoryInvitationsNoSpecModule,
+    HistoryInvitationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

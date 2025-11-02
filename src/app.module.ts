@@ -26,6 +26,8 @@ import { NotificationsModule } from './app/modules/notifications/notifications.m
 import { FeedbacksModule } from './app/modules/feedbacks/feedbacks.module';
 import { SupportsModule } from './app/modules/supports/supports.module';
 import { ProgressesModule } from './app/modules/progresses/progresses.module';
+import { DiscussionsModule } from './app/modules/discussions/discussions.module';
+import { GroupMessagesModule } from './app/modules/group-messages/group-messages.module';
 
 @Module({
   imports: [
@@ -54,6 +56,8 @@ import { ProgressesModule } from './app/modules/progresses/progresses.module';
     FeedbacksModule,
     SupportsModule,
     ProgressesModule,
+    DiscussionsModule,
+    GroupMessagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

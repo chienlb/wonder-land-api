@@ -5,7 +5,7 @@ export const envSchema = z.object({
     .enum(['development', 'production', 'test'])
     .default('development'),
   PORT: z.coerce.number().min(1024).max(65535).default(3000),
-  MONGO_URI: z.string().min(1, 'MONGO_URI is required'),
+  MONGODB_URI: z.string().min(1, 'MONGODB_URI is required'),
   JWT_ACCESS_TOKEN_SECRET: z
     .string()
     .min(1, 'JWT_ACCESS_TOKEN_SECRET is required'),

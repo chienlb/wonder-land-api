@@ -34,7 +34,7 @@ const logger = new Logger('Redis');
         redisClient.on('reconnecting', () =>
           logger.log('Attempting to reconnect to Redis...'),
         );
-        redisClient.on('error', (err) =>
+        redisClient.on('error', (err: Error) =>
           logger.error(`Redis error: ${err.message}`),
         );
 

@@ -30,6 +30,8 @@ import { DiscussionsModule } from './app/modules/discussions/discussions.module'
 import { GroupMessagesModule } from './app/modules/group-messages/group-messages.module';
 import { RedisModule } from './app/configs/database/redis.config';
 
+import { ConfigModule } from '@nestjs/config';
+
 @Module({
   imports: [
     UsersModule,
@@ -60,6 +62,11 @@ import { RedisModule } from './app/configs/database/redis.config';
     DiscussionsModule,
     GroupMessagesModule,
     RedisModule,
+
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env`,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

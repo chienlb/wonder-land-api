@@ -31,6 +31,7 @@ import { GroupMessagesModule } from './app/modules/group-messages/group-messages
 import { RedisModule } from './app/configs/database/redis.config';
 
 import { ConfigModule } from '@nestjs/config';
+import { AuthsModule } from './app/modules/auths/auths.module';
 
 @Module({
   imports: [
@@ -67,6 +68,8 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
       envFilePath: `.env`,
     }),
+
+    AuthsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

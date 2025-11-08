@@ -1,23 +1,52 @@
 import { Injectable } from '@nestjs/common';
 import { CreateHistoryInvitationDto } from './dto/create-history-invitation.dto';
 import { UpdateHistoryInvitationDto } from './dto/update-history-invitation.dto';
+import { HistoryInvitationDocument } from './schema/history-invitation.schema';
+import { Model } from 'mongoose';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class HistoryInvitationsService {
-  create(createHistoryInvitationDto: CreateHistoryInvitationDto) {
-    return 'This action adds a new historyInvitation';
+  constructor(
+    private readonly historyModel: Model<HistoryInvitationDocument>,
+    private readonly userService: UsersService,
+  ) {}
+
+  async createHistoryInvitation(
+    createHistoryInvitationDto: CreateHistoryInvitationDto,
+  ) {
+    const userId = await this.userService.findUserById(
+      createHistoryInvitationDto.userId,
+    );
+    if (!userId) {
+      throw new Error('User not found');
+    }
+    const historyInvitation = new this.historyModel({
+      ...createHistoryInvitationDto,
+      user: userId,
+    });
+    return await historyInvitation.save();
   }
 
-  findAll() {
-    return `This action returns all historyInvitations`;
+  async findAllHistoryInvitations() {
+    return await this.historyModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} historyInvitation`;
+  async findOneHistoryInvitation(id: string) {
+    return await this.historyModel.findById(id).exec();
   }
 
-  update(id: number, updateHistoryInvitationDto: UpdateHistoryInvitationDto) {
-    return `This action updates a #${id} historyInvitation`;
+  async updateHistoryInvitation(
+    id: string,
+    updateHistoryInvitationDto: UpdateHistoryInvitationDto,
+  ) {
+    return await this.historyModel.findByIdAndUpdate(
+      id,
+      updateHistoryInvitationDto,
+      {
+        new: true,
+      },
+    );
   }
 
   remove(id: number) {

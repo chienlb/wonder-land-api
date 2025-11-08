@@ -7,17 +7,18 @@ export enum InvitationCodeType {
   TRIAL = 'trial', // Dùng thử
   DISCOUNT = 'discount', // Giảm giá
   SPECIAL = 'special', // Đặc biệt
+  GROUP_JOIN = 'group_join', // Mã mời tham gia nhóm / lớp học
 }
-
 export interface IInvitationCode {
   code: string; // Mã mời dùng thử (6-10 ký tự), random tự động sau khi dùng
-  event: string; // Sự kiện liên quan đến mã
+  event?: string; // Sự kiện liên quan đến mã
   description?: string; // Mô tả về mã
   type?: InvitationCodeType; // Loại mã (ví dụ: "trial", "discount", "special")
   totalUses: number; // Tổng số lần sử dụng mã
   usesLeft: number; // Số lần sử dụng còn lại
   startedAt: Date; // Ngày bắt đầu có hiệu lực
-  expiredAt: Date; // Ngày hết hạn
+  expiredAt?: Date; // Ngày hết hạn chỉ đối với mã dùng thử
+  isSystem?: boolean; // Mã mời của hệ thống phát dùng thử hay là mã mời của người dùng
   isActive: boolean; // Mã còn hiệu lực không
   createdBy: Types.ObjectId; // ID người tạo mã
   updatedBy?: Types.ObjectId; // ID người cập nhật mã lần cuối
@@ -59,8 +60,11 @@ export class InvitationCode implements IInvitationCode {
   @Prop({ required: true })
   startedAt: Date;
 
-  @Prop({ required: true })
-  expiredAt: Date;
+  @Prop()
+  expiredAt?: Date;
+
+  @Prop({ default: false })
+  isSystem?: boolean;
 
   @Prop({ default: true })
   isActive: boolean;

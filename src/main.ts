@@ -9,6 +9,7 @@ import { json, urlencoded } from 'express';
 import type { Express } from 'express';
 import { envSchema } from './app/configs/env/env.config';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { HttpExceptionFilter } from './app/common/filters/http-exception.filter';
 
 async function bootstrap(): Promise<void> {
   const logger = new Logger('Bootstrap');
@@ -78,7 +79,6 @@ async function bootstrap(): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   app.use(cookieParser());
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   app.use(compression());
 
   if (env.API_PREFIX) {
@@ -105,6 +105,8 @@ async function bootstrap(): Promise<void> {
   const prefix = env.API_PREFIX;
   app.setGlobalPrefix(prefix);
   logger.log(`Server started at http://localhost:${env.PORT}`);
+
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   const gracefulShutdown = async (reason: string, code = 0): Promise<void> => {
     try {

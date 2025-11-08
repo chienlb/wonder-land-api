@@ -21,7 +21,7 @@ export enum UserStatus {
 }
 
 // Loại hình tài khoản (phương thức đăng nhập)
-export enum UserTypeAccout {
+export enum UserTypeAccount {
   EMAIL = 'email',
   GOOGLE = 'google',
   FACEBOOK = 'facebook',
@@ -78,11 +78,13 @@ export interface IUser {
   className?: Types.ObjectId; // Lớp học của người dùng
   parent?: Types.ObjectId; // Phụ huynh của người dùng
   teacher?: Types.ObjectId; // Giáo viên của người dùng
-  typeAccount: UserTypeAccout; // Loại hình tài khoản của người dùng
+  typeAccount: UserTypeAccount; // Loại hình tài khoản của người dùng
   isVerify: boolean; // Trạng thái xác thực của người dùng
   tokenVerify: string; // Mã token dùng để xác thực tài khoản
   refCode?: string; // Mã giới thiệu của người dùng
   invitedBy?: Types.ObjectId; // Người mời của người dùng
+  invitedAt?: Date; // Ngày người dùng được mời
+  totalInvites?: number; // Tổng số người dùng đã mời
   exp?: number; // Số kinh nghiệm của người dùng
   streakDays?: number; // Số ngày liên tiếp hoạt động của người dùng
   progressLevel?: number; // Cấp độ tiến bộ của người dùng
@@ -166,8 +168,8 @@ export class User implements IUser {
   @Prop({ type: Types.ObjectId, ref: 'User' })
   teacher?: Types.ObjectId;
 
-  @Prop({ enum: UserTypeAccout, default: UserTypeAccout.EMAIL })
-  typeAccount: UserTypeAccout;
+  @Prop({ enum: UserTypeAccount, default: UserTypeAccount.EMAIL })
+  typeAccount: UserTypeAccount;
 
   @Prop({ default: false })
   isVerify: boolean;

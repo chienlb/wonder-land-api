@@ -81,7 +81,7 @@ export interface IUser {
   teacher?: Types.ObjectId; // Giáo viên của người dùng
   typeAccount: UserTypeAccount; // Loại hình tài khoản của người dùng
   isVerify: boolean; // Trạng thái xác thực của người dùng
-  tokenVerify: string; // Mã token dùng để xác thực tài khoản
+  codeVerify: string; // Mã code dùng để xác thực tài khoản
   exp?: number; // Số kinh nghiệm của người dùng
   streakDays?: number; // Số ngày liên tiếp hoạt động của người dùng
   progressLevel?: number; // Cấp độ tiến bộ của người dùng
@@ -172,7 +172,7 @@ export class User implements IUser {
   isVerify: boolean;
 
   @Prop()
-  tokenVerify: string;
+  codeVerify: string;
 
   @Prop()
   refCode?: string;

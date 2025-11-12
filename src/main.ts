@@ -111,15 +111,15 @@ async function bootstrap(): Promise<void> {
   app.enableShutdownHooks();
 
   const config = new DocumentBuilder()
-    .setTitle('API Documentation')
-    .setDescription('API documentation for the application')
-    .setVersion('1.0')
-    .addTag('auth')
+    .setTitle(env.SWAGGER_TITLE)
+    .setDescription(env.SWAGGER_DESCRIPTION)
+    .setVersion(env.SWAGGER_VERSION)
+    .addTag(env.SWAGGER_TAG)
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document, {
-    customSiteTitle: 'API Documentation',
+  SwaggerModule.setup(`${env.SWAGGER_PATH}`, app, document, {
+    customSiteTitle: env.SWAGGER_TITLE,
   });
 
   const port = Number(process.env.PORT) || 3000;

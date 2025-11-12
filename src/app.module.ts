@@ -29,6 +29,7 @@ import { ProgressesModule } from './app/modules/progresses/progresses.module';
 import { DiscussionsModule } from './app/modules/discussions/discussions.module';
 import { GroupMessagesModule } from './app/modules/group-messages/group-messages.module';
 import { RedisModule } from './app/configs/database/redis.config';
+import { MailModule } from './app/configs/mail/mail.module';
 
 import { ConfigModule } from '@nestjs/config';
 import { AuthsModule } from './app/modules/auths/auths.module';
@@ -37,6 +38,7 @@ import { MongoDBModule } from './app/configs/database/mongodb.config';
 @Module({
   imports: [
     MongoDBModule,
+    MailModule,
     UsersModule,
     TokensModule,
     ProvincesModule,
@@ -76,4 +78,4 @@ import { MongoDBModule } from './app/configs/database/mongodb.config';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

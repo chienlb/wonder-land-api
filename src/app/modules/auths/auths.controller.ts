@@ -23,7 +23,7 @@ export class AuthsController {
         value: {
           "fullname": "Nguyen Van A",
           "username": "nguyenvana",
-          "email": "nguyenvana@example.com",
+          "email": "nguyenvana@gmail.com",
           "password": "123456",
           "birthDate": "2015-09-15",
           "role": "parent",

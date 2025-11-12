@@ -27,6 +27,8 @@ import {
 import { LoginAuthDto } from './dto/login-auth.dto';
 import * as jwt from 'jsonwebtoken';
 import { TokensService } from '../tokens/tokens.service';
+import { sendEmail } from 'src/app/common/utils/mail.util';
+import { randomUUID } from 'crypto';
 
 
 @Injectable()
@@ -177,6 +179,17 @@ export class AuthsService {
           // Không throw — vì không muốn làm fail luôn quá trình đăng ký
         }
       }
+      const codeVerify = randomUUID().substring(0, 6);
+      savedUser.codeVerify = codeVerify;
+      await savedUser.save();
+
+      // 8. Gửi email xác minh
+      try {
+        await sendEmail(savedUser.email, 'Xác minh email', codeVerify, 900);
+      } catch (err) {
+        this.logger.error('Error while sending email verification:', err);
+      }
+
       return savedUser.toObject();
     } catch (error) {
       this.logger.error(

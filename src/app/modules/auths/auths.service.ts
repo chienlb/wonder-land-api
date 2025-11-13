@@ -30,7 +30,11 @@ import { TokensService } from '../tokens/tokens.service';
 import { sendEmail } from 'src/app/common/utils/mail.util';
 import { randomUUID } from 'crypto';
 import { Token, TokenDocument } from '../tokens/schema/token.schema';
-
+import {
+  LogoutAllDevicesAuthDto,
+  LogoutDeviceAuthDto,
+  LogoutNotDeviceAuthDto,
+} from './dto/logout-auth.dto';
 
 @Injectable()
 export class AuthsService {
@@ -100,7 +104,9 @@ export class AuthsService {
         });
 
         if (!inviter) {
-          this.logger.warn(`Invalid invitation code: ${registerAuthDto.inviteCode}`);
+          this.logger.warn(
+            `Invalid invitation code: ${registerAuthDto.inviteCode}`,
+          );
           throw new NotFoundException(
             'Invalid invitation code or inviter does not exist.',
           );
@@ -157,7 +163,9 @@ export class AuthsService {
 
       // 7. Tạo mã mời (chỉ cho giáo viên hoặc quản trị)
       if (
-        [UserRole.PARENT, UserRole.TEACHER, UserRole.ADMIN].includes(savedUser.role as UserRole)
+        [UserRole.PARENT, UserRole.TEACHER, UserRole.ADMIN].includes(
+          savedUser.role as UserRole,
+        )
       ) {
         try {
           const invitationCodesData: CreateInvitationCodeDto = {
@@ -189,18 +197,23 @@ export class AuthsService {
 
       // 8. Gửi email xác minh
       try {
-        await sendEmail(savedUser.email, 'Xác minh email', 'account-verification-email', {
-          brandName: 'EnglishOne',
-          userName: savedUser.username,
-          verificationCode: codeVerify,
-          userEmail: savedUser.email,
-          supportEmail: 'support@englishone.com',
-          companyAddress: '242 Nguyen Trai, Q9, TP.HCM',
-          websiteUrl: 'https://englishone.com',
-          twitterUrl: '',
-          facebookUrl: '',
-          year: new Date().getFullYear(),
-        });
+        await sendEmail(
+          savedUser.email,
+          'Xác minh email',
+          'account-verification-email',
+          {
+            brandName: 'EnglishOne',
+            userName: savedUser.username,
+            verificationCode: codeVerify,
+            userEmail: savedUser.email,
+            supportEmail: 'support@englishone.com',
+            companyAddress: '242 Nguyen Trai, Q9, TP.HCM',
+            websiteUrl: 'https://englishone.com',
+            twitterUrl: '',
+            facebookUrl: '',
+            year: new Date().getFullYear(),
+          },
+        );
       } catch (err) {
         this.logger.error('Error while sending email verification:', err);
       }
@@ -223,7 +236,6 @@ export class AuthsService {
       throw new BadRequestException('Registration failed. Please try again.');
     }
   }
-
 
   async login(
     loginAuthDto: LoginAuthDto,
@@ -295,7 +307,9 @@ export class AuthsService {
     }
   }
 
-  async verifyEmail(codeVerify: string): Promise<{ email: string; user: Partial<User> }> {
+  async verifyEmail(
+    codeVerify: string,
+  ): Promise<{ email: string; user: Partial<User> }> {
     const user = await this.userModel.findOne({ codeVerify });
     if (!user) {
       throw new NotFoundException('User not found with the provided code.');
@@ -310,7 +324,9 @@ export class AuthsService {
     };
   }
 
-  async resendVerificationEmail(email: string): Promise<{ email: string; codeVerify: string }> {
+  async resendVerificationEmail(
+    email: string,
+  ): Promise<{ email: string; codeVerify: string }> {
     const user = await this.userModel.findOne({ email });
     if (!user) {
       throw new NotFoundException('User not found with the provided email.');
@@ -334,7 +350,9 @@ export class AuthsService {
     };
   }
 
-  async forgotPassword(email: string): Promise<{ email: string; codeVerify: string }> {
+  async forgotPassword(
+    email: string,
+  ): Promise<{ email: string; codeVerify: string }> {
     const user = await this.userModel.findOne({ email });
     if (!user) {
       throw new NotFoundException('User not found with the provided email.');
@@ -365,7 +383,11 @@ export class AuthsService {
     const salt = await bcrypt.genSalt(10);
   }
 
-  async changePassword(email: string, password: string, codeVerify: string): Promise<{ user: Partial<User> }> {
+  async changePassword(
+    email: string,
+    password: string,
+    codeVerify: string,
+  ): Promise<{ user: Partial<User> }> {
     const user = await this.userModel.findOne({ email, codeVerify });
     if (!user) {
       throw new NotFoundException('User not found with the provided email.');
@@ -381,8 +403,16 @@ export class AuthsService {
     };
   }
 
-  async logoutAllDevices(userId: string): Promise<{ message: string }> {
-    const tokens = await this.tokenModel.updateMany({ userId, isDeleted: false }, { isDeleted: true });
+  async logoutAllDevices(
+    logoutAllDevicesAuthDto: LogoutAllDevicesAuthDto,
+  ): Promise<{ message: string }> {
+    const tokens = await this.tokenModel.updateMany(
+      {
+        userId: logoutAllDevicesAuthDto.userId,
+        isDeleted: false,
+      },
+      { isDeleted: true },
+    );
     if (tokens.modifiedCount === 0) {
       throw new NotFoundException('No tokens found for the provided user.');
     }
@@ -392,10 +422,21 @@ export class AuthsService {
     };
   }
 
-  async logoutDevice(userId: string, deviceId: string): Promise<{ message: string }> {
-    const token = await this.tokenModel.updateOne({ userId, deviceId, isDeleted: false }, { isDeleted: true });
+  async logoutDevice(
+    logoutDeviceAuthDto: LogoutDeviceAuthDto,
+  ): Promise<{ message: string }> {
+    const token = await this.tokenModel.updateOne(
+      {
+        userId: logoutDeviceAuthDto.userId,
+        deviceId: logoutDeviceAuthDto.deviceId,
+        isDeleted: false,
+      },
+      { isDeleted: true },
+    );
     if (token.modifiedCount === 0) {
-      throw new NotFoundException('Token not found for the provided user and device.');
+      throw new NotFoundException(
+        'Token not found for the provided user and device.',
+      );
     }
 
     return {
@@ -403,10 +444,20 @@ export class AuthsService {
     };
   }
 
-  async logoutNotDevice(userId: string, deviceId: string): Promise<{ message: string }> {
-    const tokens = await this.tokenModel.updateMany({ userId, deviceId: { $ne: deviceId } }, { isDeleted: true });
+  async logoutNotDevice(
+    logoutNotDeviceAuthDto: LogoutNotDeviceAuthDto,
+  ): Promise<{ message: string }> {
+    const tokens = await this.tokenModel.updateMany(
+      {
+        userId: logoutNotDeviceAuthDto.userId,
+        deviceId: { $ne: logoutNotDeviceAuthDto.deviceId },
+      },
+      { isDeleted: true },
+    );
     if (tokens.modifiedCount === 0) {
-      throw new NotFoundException('No tokens found for the provided user and device.');
+      throw new NotFoundException(
+        'No tokens found for the provided user and device.',
+      );
     }
 
     return {

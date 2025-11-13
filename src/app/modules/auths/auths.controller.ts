@@ -4,6 +4,11 @@ import { RegisterAuthDto } from './dto/register-auth.dto';
 import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { ok } from 'src/app/common/response/api-response';
+import {
+  LogoutAllDevicesAuthDto,
+  LogoutDeviceAuthDto,
+  LogoutNotDeviceAuthDto,
+} from './dto/logout-auth.dto';
 
 @ApiTags('Auths')
 @Controller('auths')
@@ -21,22 +26,21 @@ export class AuthsController {
       normal: {
         summary: 'Example of a normal user',
         value: {
-          "fullname": "Nguyen Van A",
-          "username": "nguyenvana",
-          "email": "nguyenvana@gmail.com",
-          "password": "123456",
-          "birthDate": "2015-09-15",
-          "role": "parent",
-          "phone": "0912345678",
-          "gender": "male",
-          "typeAccount": "email"
+          fullname: 'Nguyen Van A',
+          username: 'nguyenvana',
+          email: 'nguyenvana@gmail.com',
+          password: '123456',
+          birthDate: '2015-09-15',
+          role: 'parent',
+          phone: '0912345678',
+          gender: 'male',
+          typeAccount: 'email',
         },
       },
     },
   })
   @ApiResponse({ status: 201, description: 'User registered successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
-
   async register(@Body() registerAuthDto: RegisterAuthDto) {
     if (
       !registerAuthDto.username ||
@@ -59,11 +63,11 @@ export class AuthsController {
       normal: {
         summary: 'Example of a normal user',
         value: {
-          "email": "nguyenvana@example.com",
-          "password": "123456",
-          "deviceId": "1234567890",
-          "typeDevice": "android",
-          "typeLogin": "email"
+          email: 'nguyenvana@example.com',
+          password: '123456',
+          deviceId: '1234567890',
+          typeDevice: 'android',
+          typeLogin: 'email',
         },
       },
     },
@@ -84,7 +88,7 @@ export class AuthsController {
       normal: {
         summary: 'Example of a normal user',
         value: {
-          "codeVerify": "123456",
+          codeVerify: '123456',
         },
       },
     },
@@ -96,7 +100,6 @@ export class AuthsController {
     return ok(result, 'Email verified successfully', 200);
   }
 
-
   @Post('resend-verification-email')
   @ApiOperation({ summary: 'Resend verification email' })
   @ApiBody({
@@ -106,12 +109,15 @@ export class AuthsController {
       normal: {
         summary: 'Example of a normal user',
         value: {
-          "email": "nguyenvana@example.com",
+          email: 'nguyenvana@example.com',
         },
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Verification email resent successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Verification email resent successfully',
+  })
   @ApiResponse({ status: 400, description: 'Bad request' })
   async resendVerificationEmail(@Body() email: string) {
     const result = await this.authsService.resendVerificationEmail(email);
@@ -127,12 +133,15 @@ export class AuthsController {
       normal: {
         summary: 'Example of a normal user',
         value: {
-          "email": "nguyenvana@example.com",
+          email: 'nguyenvana@example.com',
         },
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Password reset email sent successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Password reset email sent successfully',
+  })
   @ApiResponse({ status: 400, description: 'Bad request' })
   async forgotPassword(@Body() email: string) {
     const result = await this.authsService.forgotPassword(email);
@@ -148,8 +157,8 @@ export class AuthsController {
       normal: {
         summary: 'Example of a normal user',
         value: {
-          "codeVerify": "123456",
-          "password": "123456",
+          codeVerify: '123456',
+          password: '123456',
         },
       },
     },
@@ -170,17 +179,25 @@ export class AuthsController {
       normal: {
         summary: 'Example of a normal user',
         value: {
-          "email": "nguyenvana@example.com",
-          "password": "123456",
-          "codeVerify": "123456",
+          email: 'nguyenvana@example.com',
+          password: '123456',
+          codeVerify: '123456',
         },
       },
     },
   })
   @ApiResponse({ status: 200, description: 'Password changed successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  async changePassword(@Body() email: string, @Body() password: string, @Body() codeVerify: string) {
-    const result = await this.authsService.changePassword(email, password, codeVerify);
+  async changePassword(
+    @Body() email: string,
+    @Body() password: string,
+    @Body() codeVerify: string,
+  ) {
+    const result = await this.authsService.changePassword(
+      email,
+      password,
+      codeVerify,
+    );
     return ok(result, 'Password changed successfully', 200);
   }
 
@@ -193,15 +210,19 @@ export class AuthsController {
       normal: {
         summary: 'Example of a normal user',
         value: {
-          "userId": "1234567890",
+          userId: '1234567890',
         },
       },
     },
   })
   @ApiResponse({ status: 200, description: 'Logout all devices successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  async logoutAllDevices(@Body() userId: string) {
-    const result = await this.authsService.logoutAllDevices(userId);
+  async logoutAllDevices(
+    @Body() logoutAllDevicesAuthDto: LogoutAllDevicesAuthDto,
+  ) {
+    const result = await this.authsService.logoutAllDevices(
+      logoutAllDevicesAuthDto,
+    );
     return ok(result, 'Logout all devices successfully', 200);
   }
 
@@ -214,16 +235,16 @@ export class AuthsController {
       normal: {
         summary: 'Example of a normal user',
         value: {
-          "userId": "1234567890",
-          "deviceId": "1234567890",
+          userId: '1234567890',
+          deviceId: '1234567890',
         },
       },
     },
   })
   @ApiResponse({ status: 200, description: 'Logout device successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  async logoutDevice(@Body() userId: string, @Body() deviceId: string) {
-    const result = await this.authsService.logoutDevice(userId, deviceId);
+  async logoutDevice(@Body() logoutDeviceAuthDto: LogoutDeviceAuthDto) {
+    const result = await this.authsService.logoutDevice(logoutDeviceAuthDto);
     return ok(result, 'Logout device successfully', 200);
   }
 
@@ -236,16 +257,20 @@ export class AuthsController {
       normal: {
         summary: 'Example of a normal user',
         value: {
-          "userId": "1234567890",
-          "deviceId": "1234567890",
+          userId: '1234567890',
+          deviceId: '1234567890',
         },
       },
     },
   })
   @ApiResponse({ status: 200, description: 'Logout not device successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  async logoutNotDevice(@Body() userId: string, @Body() deviceId: string) {
-    const result = await this.authsService.logoutNotDevice(userId, deviceId);
+  async logoutNotDevice(
+    @Body() logoutNotDeviceAuthDto: LogoutNotDeviceAuthDto,
+  ) {
+    const result = await this.authsService.logoutNotDevice(
+      logoutNotDeviceAuthDto,
+    );
     return ok(result, 'Logout not device successfully', 200);
   }
 }

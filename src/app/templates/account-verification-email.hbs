@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Xác thực tài khoản</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #FFFEF5;
+            line-height: 1.6;
+            color: #3a3a3a;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        .container {
+            max-width: 580px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 16px rgba(45, 157, 217, 0.12);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        /* header gradient mint sang coral */
+        .header {
+            background: linear-gradient(135deg, #4ECDC4 0%, #FF6B6B 100%);
+            padding: 70px 40px 50px;
+            text-align: center;
+            border-bottom: none;
+        }
+        .logo {
+            font-size: 18px;
+            font-weight: 300;
+            color: #ffffff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .content {
+            padding: 70px 40px;
+        }
+        /* greeting màu sky blue */
+        .greeting {
+            font-size: 24px;
+            font-weight: 300;
+            color: #2D9DD9;
+            margin: 0 0 35px 0;
+            letter-spacing: 0.5px;
+        }
+        .description {
+            font-size: 15px;
+            color: #5a5a5a;
+            line-height: 1.8;
+            margin: 0 0 32px 0;
+        }
+        /* highlight màu coral */
+        .highlight {
+            color: #FF6B6B;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .code-section {
+            margin: 60px 0;
+            text-align: center;
+        }
+        /* code-label màu sky blue */
+        .code-label {
+            font-size: 11px;
+            color: #2D9DD9;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            display: block;
+            font-weight: 600;
+        }
+        /* code-box background gradient mint nhạt */
+        .code-box {
+            background: linear-gradient(135deg, #E0F7F4 0%, #F0FFFE 100%);
+            border: 2px solid #4ECDC4;
+            border-radius: 12px;
+            padding: 50px 40px;
+            margin: 0;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(78, 205, 196, 0.15);
+        }
+        .code-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #FFD700 0%, #2D9DD9 100%);
+            border-radius: 12px 12px 0 0;
+        }
+        /* code màu sky blue */
+        .code {
+            font-family: 'Courier New', monospace;
+            font-size: 22px;
+            font-weight: 600;
+            color: #2D9DD9;
+            letter-spacing: 6px;
+            word-break: break-all;
+            margin: 0;
+            line-height: 1.6;
+        }
+        /* divider gradient mint sang coral */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #4ECDC4, transparent);
+            margin: 50px 0;
+        }
+        /* info-section background gradient mint nhạt */
+        .info-section {
+            margin: 50px 0;
+            padding: 35px 40px;
+            background: linear-gradient(135deg, #E0F7F4 0%, #F0FFFE 100%);
+            border-left: 5px solid #4ECDC4;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(78, 205, 196, 0.12);
+        }
+        /* info-title màu mint green */
+        .info-title {
+            font-size: 12px;
+            color: #4ECDC4;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        .info-text {
+            font-size: 14px;
+            color: #444444;
+            line-height: 1.8;
+            margin: 0;
+        }
+        .verification-steps {
+            margin: 40px 0;
+        }
+        .step {
+            display: flex;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+        /* step-number background màu sky blue */
+        .step-number {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            background-color: #2D9DD9;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 18px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(45, 157, 217, 0.3);
+        }
+        .step-content {
+            font-size: 14px;
+            color: #5a5a5a;
+            line-height: 1.6;
+            padding-top: 4px;
+        }
+        /* expiry-notice background coral nhạt */
+        .expiry-notice {
+            background: linear-gradient(135deg, #FFE8E0 0%, #FFEDD5 100%);
+            border-left: 5px solid #FF6B6B;
+            padding: 30px 35px;
+            margin: 50px 0;
+            font-size: 14px;
+            color: #4a4a4a;
+            line-height: 1.9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.12);
+        }
+        /* support-link màu sky blue */
+        .support-link {
+            color: #2D9DD9;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid #FF6B6B;
+        }
+        .support-link:hover {
+            color: #FF6B6B;
+            border-bottom-color: #2D9DD9;
+        }
+        /* footer gradient mint sang sky blue */
+        .footer {
+            background: linear-gradient(135deg, #E0F7F4 0%, #E8F8FC 100%);
+            padding: 60px 40px;
+            text-align: center;
+            border-top: 2px solid #4ECDC4;
+            border-radius: 0 0 12px 12px;
+        }
+        /* footer-text màu sky blue */
+        .footer-text {
+            font-size: 12px;
+            color: #2D9DD9;
+            margin: 0 0 12px 0;
+            line-height: 1.9;
+            letter-spacing: 0.4px;
+            font-weight: 500;
+        }
+        .footer-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #FFD700, transparent);
+            margin: 30px 0;
+        }
+        .social-links {
+            text-align: center;
+            margin-top: 30px;
+        }
+        /* social-link màu mint green */
+        .social-link {
+            display: inline-block;
+            margin: 0 18px;
+            color: #4ECDC4;
+            text-decoration: none;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+        .social-link:hover {
+            color: #FF6B6B;
+        }
+        @media (max-width: 600px) {
+            .content {
+                padding: 50px 25px;
+            }
+            .header {
+                padding: 50px 25px 40px;
+            }
+            .greeting {
+                font-size: 22px;
+            }
+            .description {
+                font-size: 14px;
+            }
+            .code {
+                font-size: 20px;
+                letter-spacing: 5px;
+            }
+            .code-box {
+                padding: 35px 25px;
+            }
+            .footer {
+                padding: 50px 25px;
+            }
+            .info-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <table role="presentation">
+        <tr>
+            <td align="center" style="padding: 30px 10px;">
+                <table role="presentation" class="container">
+                    <tr>
+                        <td class="header">
+                            <div class="logo">{{brandName}}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <p class="greeting">Chào mừng {{userName}},</p>
+                            <p class="description">
+                                Cảm ơn bạn đã đăng ký tài khoản! Để hoàn tất quá trình xác thực, vui lòng nhập mã bên dưới.
+                            </p>
+                            <div class="code-section">
+                                <span class="code-label">Mã xác thực email của bạn</span>
+                                <div class="code-box">
+                                    <p class="code">{{verificationCode}}</p>
+                                </div>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="verification-steps">
+                                <p style="font-size: 12px; color: #2D9DD9; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 30px; font-weight: 700;">Hướng dẫn xác thực</p>
+                                <div class="step">
+                                    <div class="step-number">1</div>
+                                    <div class="step-content">
+                                        Trở lại ứng dụng và nhập mã xác thực <span class="highlight">{{verificationCode}}</span>
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-number">2</div>
+                                    <div class="step-content">
+                                        Nhấn nút "Xác thực" để hoàn tất đăng ký
+                                    </div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-number">3</div>
+                                    <div class="step-content">
+                                        Bắt đầu sử dụng tài khoản của bạn ngay lập tức
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="info-section">
+                                <p class="info-title">Thông tin tài khoản</p>
+                                <p class="info-text">
+                                    Email: <strong>{{userEmail}}</strong><br>
+                                    Thời gian xác thực hết hạn: <span class="highlight">10 phút</span>
+                                </p>
+                            </div>
+                            <div class="expiry-notice">
+                                Mã này chỉ có hiệu lực trong <span class="highlight">10 phút</span>. Nếu bạn không yêu cầu xác thực, vui lòng bỏ qua email này.
+                            </div>
+                            <p class="description" style="text-align: center;">
+                                Cần trợ giúp? Liên hệ với <a href="mailto:{{supportEmail}}" class="support-link">đội hỗ trợ</a> của chúng tôi.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="footer">
+                            <p class="footer-text">
+                                © {{year}} {{brandName}}. Bảo lưu mọi quyền.
+                            </p>
+                            <p class="footer-text">
+                                {{companyAddress}}
+                            </p>
+                            <div class="footer-divider"></div>
+                            <div class="social-links">
+                                {{#if websiteUrl}}<a href="{{websiteUrl}}" class="social-link">Website</a>{{/if}}
+                                {{#if twitterUrl}}<a href="{{twitterUrl}}" class="social-link">Twitter</a>{{/if}}
+                                {{#if facebookUrl}}<a href="{{facebookUrl}}" class="social-link">Facebook</a>{{/if}}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

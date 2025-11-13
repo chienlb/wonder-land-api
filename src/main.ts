@@ -117,8 +117,15 @@ async function bootstrap(): Promise<void> {
     .addTag(env.SWAGGER_TAG)
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config, {
+    deepScanRoutes: true,
+    extraModels: [],
+    ignoreGlobalPrefix: true,
+  });
   SwaggerModule.setup(`${env.SWAGGER_PATH}`, app, document, {
+    swaggerOptions: {
+      defaultModelsExpandDepth: -1,
+    },
     customSiteTitle: env.SWAGGER_TITLE,
   });
 

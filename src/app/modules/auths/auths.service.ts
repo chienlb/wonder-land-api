@@ -29,6 +29,7 @@ import * as jwt from 'jsonwebtoken';
 import { TokensService } from '../tokens/tokens.service';
 import { sendEmail } from 'src/app/common/utils/mail.util';
 import { randomUUID } from 'crypto';
+import { Token, TokenDocument } from '../tokens/schema/token.schema';
 
 
 @Injectable()
@@ -46,6 +47,9 @@ export class AuthsService {
 
     private readonly invitationCodesService: InvitationCodesService,
     private readonly historyInvitationsService: HistoryInvitationsService,
+
+    @InjectModel(Token.name)
+    private readonly tokenModel: Model<TokenDocument>,
   ) { }
   async register(registerAuthDto: RegisterAuthDto): Promise<Partial<User>> {
     try {
@@ -185,7 +189,18 @@ export class AuthsService {
 
       // 8. Gửi email xác minh
       try {
-        await sendEmail(savedUser.email, 'Xác minh email', codeVerify, 900);
+        await sendEmail(savedUser.email, 'Xác minh email', 'account-verification-email', {
+          brandName: 'EnglishOne',
+          userName: savedUser.username,
+          verificationCode: codeVerify,
+          userEmail: savedUser.email,
+          supportEmail: 'support@englishone.com',
+          companyAddress: '242 Nguyen Trai, Q9, TP.HCM',
+          websiteUrl: 'https://englishone.com',
+          twitterUrl: '',
+          facebookUrl: '',
+          year: new Date().getFullYear(),
+        });
       } catch (err) {
         this.logger.error('Error while sending email verification:', err);
       }
@@ -278,5 +293,124 @@ export class AuthsService {
 
       throw new BadRequestException('Login failed. Please try again.');
     }
+  }
+
+  async verifyEmail(codeVerify: string): Promise<{ email: string; user: Partial<User> }> {
+    const user = await this.userModel.findOne({ codeVerify });
+    if (!user) {
+      throw new NotFoundException('User not found with the provided code.');
+    }
+
+    user.isVerify = true;
+    await user.save();
+
+    return {
+      email: user.email,
+      user: user,
+    };
+  }
+
+  async resendVerificationEmail(email: string): Promise<{ email: string; codeVerify: string }> {
+    const user = await this.userModel.findOne({ email });
+    if (!user) {
+      throw new NotFoundException('User not found with the provided email.');
+    }
+
+    const codeVerify = randomUUID().substring(0, 6);
+    user.codeVerify = codeVerify;
+    await user.save();
+
+    await sendEmail(email, 'Xác minh email', 'account-verification-email', {
+      brandName: 'EnglishOne',
+      userName: user.username,
+      verificationCode: codeVerify,
+      userEmail: user.email,
+      supportEmail: 'support@englishone.com',
+    });
+
+    return {
+      email: user.email,
+      codeVerify: codeVerify,
+    };
+  }
+
+  async forgotPassword(email: string): Promise<{ email: string; codeVerify: string }> {
+    const user = await this.userModel.findOne({ email });
+    if (!user) {
+      throw new NotFoundException('User not found with the provided email.');
+    }
+
+    const codeVerify = randomUUID().substring(0, 6);
+    user.codeVerify = codeVerify;
+    await user.save();
+
+    await sendEmail(email, 'Đặt lại mật khẩu', 'reset-password-email', {
+      brandName: 'EnglishOne',
+      userName: user.username,
+      resetCode: codeVerify,
+    });
+
+    return {
+      email: user.email,
+      codeVerify: codeVerify,
+    };
+  }
+
+  async resetPassword(codeVerify: string, password: string): Promise<void> {
+    const user = await this.userModel.findOne({ codeVerify });
+    if (!user) {
+      throw new NotFoundException('User not found with the provided code.');
+    }
+
+    const salt = await bcrypt.genSalt(10);
+  }
+
+  async changePassword(email: string, password: string, codeVerify: string): Promise<{ user: Partial<User> }> {
+    const user = await this.userModel.findOne({ email, codeVerify });
+    if (!user) {
+      throw new NotFoundException('User not found with the provided email.');
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    user.password = hashedPassword;
+    await user.save();
+
+    return {
+      user: user.toObject(),
+    };
+  }
+
+  async logoutAllDevices(userId: string): Promise<{ message: string }> {
+    const tokens = await this.tokenModel.updateMany({ userId, isDeleted: false }, { isDeleted: true });
+    if (tokens.modifiedCount === 0) {
+      throw new NotFoundException('No tokens found for the provided user.');
+    }
+
+    return {
+      message: 'Logout successful.',
+    };
+  }
+
+  async logoutDevice(userId: string, deviceId: string): Promise<{ message: string }> {
+    const token = await this.tokenModel.updateOne({ userId, deviceId, isDeleted: false }, { isDeleted: true });
+    if (token.modifiedCount === 0) {
+      throw new NotFoundException('Token not found for the provided user and device.');
+    }
+
+    return {
+      message: 'Logout successful.',
+    };
+  }
+
+  async logoutNotDevice(userId: string, deviceId: string): Promise<{ message: string }> {
+    const tokens = await this.tokenModel.updateMany({ userId, deviceId: { $ne: deviceId } }, { isDeleted: true });
+    if (tokens.modifiedCount === 0) {
+      throw new NotFoundException('No tokens found for the provided user and device.');
+    }
+
+    return {
+      message: 'Logout successful.',
+    };
   }
 }

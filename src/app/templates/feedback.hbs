@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ý kiến phản hồi từ người dùng</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #F7F6FF;
+            line-height: 1.6;
+            color: #3a3a3a;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        img { max-width: 100%; height: auto; display: block; }
+
+        .container {
+            max-width: 580px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 16px rgba(124, 112, 255, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* HEADER – Indigo to Sky gradient */
+        .header {
+            background: linear-gradient(135deg, #7C70FF 0%, #56C5FF 100%);
+            padding: 70px 40px 50px;
+            text-align: center;
+        }
+        .logo {
+            font-size: 18px;
+            font-weight: 300;
+            color: #ffffff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .content {
+            padding: 70px 40px;
+        }
+
+        /* greeting – soft indigo */
+        .greeting {
+            font-size: 24px;
+            font-weight: 300;
+            color: #6A5ACD;
+            margin: 0 0 35px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .description {
+            font-size: 15px;
+            color: #5a5a5a;
+            line-height: 1.8;
+            margin: 0 0 32px 0;
+        }
+
+        .highlight {
+            color: #7C70FF;
+            font-weight: 600;
+        }
+
+        /* FEEDBACK BOX – lavender pastel */
+        .feedback-box {
+            background: linear-gradient(135deg, #F1ECFF 0%, #F8F6FF 100%);
+            border: 2px solid #D4CCFF;
+            border-radius: 12px;
+            padding: 40px 40px;
+            margin: 50px 0;
+            position: relative;
+            box-shadow: 0 4px 16px rgba(124, 112, 255, 0.12);
+        }
+        .feedback-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #56C5FF 0%, #7C70FF 100%);
+            border-radius: 12px 12px 0 0;
+        }
+        .feedback-title {
+            font-size: 22px;
+            color: #6A5ACD;
+            font-weight: 500;
+            margin: 0 0 20px 0;
+        }
+        .feedback-content {
+            font-size: 14px;
+            color: #4a4a4a;
+            line-height: 2;
+            margin: 0;
+            white-space: pre-line;
+        }
+
+        /* IMPORTANT NOTE – soft sky yellow */
+        .note-box {
+            background: linear-gradient(135deg, #FFFBEA 0%, #FFFDF5 100%);
+            border-left: 5px solid #FFD54F;
+            padding: 25px 35px;
+            margin: 50px 0;
+            font-size: 14px;
+            color: #4a4a4a;
+            line-height: 1.9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(255, 213, 79, 0.15);
+        }
+
+        /* ACTION */
+        .action-box {
+            background: linear-gradient(135deg, #EAF4FF 0%, #F1F8FF 100%);
+            border: 2px solid #56A6FF;
+            padding: 40px;
+            margin: 50px 0;
+            text-align: center;
+            border-radius: 8px;
+        }
+        .action-text {
+            font-size: 14px;
+            color: #666666;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        .action-link {
+            color: #266DFF;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid #7C70FF;
+            transition: 0.3s ease;
+        }
+        .action-link:hover {
+            color: #7C70FF;
+            border-bottom-color: #266DFF;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #7C70FF, transparent);
+            margin: 50px 0;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: linear-gradient(135deg, #EEF2FF 0%, #F4F7FF 100%);
+            padding: 60px 40px;
+            text-align: center;
+            border-top: 2px solid #7C70FF;
+            border-radius: 0 0 12px 12px;
+        }
+        .footer-text {
+            font-size: 12px;
+            color: #6A5ACD;
+            margin: 0 0 12px 0;
+            line-height: 1.9;
+            letter-spacing: 0.4px;
+            font-weight: 500;
+        }
+        .footer-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #FFD54F, transparent);
+            margin: 30px 0;
+        }
+
+        @media (max-width: 600px) {
+            .content { padding: 50px 25px; }
+            .header { padding: 50px 25px 40px; }
+            .feedback-box { padding: 35px 25px; }
+            .action-box { padding: 25px; }
+            .footer { padding: 50px 25px; }
+        }
+    </style>
+</head>
+<body>
+<table role="presentation">
+    <tr>
+        <td align="center" style="padding: 30px 10px;">
+            <table role="presentation" class="container">
+                <tr>
+                    <td class="header">
+                        <div class="logo">{{brandName}}</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="content">
+                        <p class="greeting">Xin chào <b>{{userName}}</b>,</p>
+
+                        <p class="description">
+                            Chúng tôi đã nhận được <span class="highlight">ý kiến phản hồi</span> từ bạn.  
+                            Dưới đây là nội dung bạn đã gửi:
+                        </p>
+
+                        <div class="feedback-box">
+                            <div class="feedback-title">Nội dung phản hồi</div>
+                            <div class="feedback-content">{{feedbackMessage}}</div>
+                        </div>
+
+                        <div class="note-box">
+                            Cảm ơn bạn đã dành thời gian đóng góp ý kiến.  
+                            Đội ngũ của chúng tôi sẽ xem xét và phản hồi sớm nhất có thể.
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="action-box">
+                            <p class="action-text">Nếu bạn muốn bổ sung thêm thông tin, hãy gửi tại đây:</p>
+                            <p class="action-text">
+                                <a href="{{contactLink}}" class="action-link">Gửi thêm phản hồi</a>
+                            </p>
+                        </div>
+
+                        <p class="description">
+                            Đây là email thông báo tự động. Vui lòng không trả lời trực tiếp email này.
+                        </p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="footer">
+                        <p class="footer-text">
+                            © {{year}} {{brandName}}. Mọi quyền được bảo lưu.
+                        </p>
+                        <div class="footer-divider"></div>
+
+                        <p class="footer-text">
+                            <a href="{{faqLink}}" style="color: #6A5ACD; text-decoration: none;">Xem FAQ</a>
+                        </p>
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

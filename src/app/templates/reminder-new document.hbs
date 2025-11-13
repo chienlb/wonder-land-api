@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Có tài liệu mới</title>
+
+    <style>
+        body {
+            margin: 0; padding: 0;
+            background: #F3FFFA;
+            font-family: 'Segoe UI', sans-serif;
+            color: #2F3A3A; line-height: 1.6;
+        }
+
+        .container {
+            max-width: 580px; margin: 0 auto;
+            background: #fff; border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 18px rgba(0,150,136,0.12);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #00C49A 0%, #7FE8D8 100%);
+            padding: 55px 40px; text-align: center;
+        }
+        .logo {
+            color: #fff; font-size: 20px;
+            letter-spacing: 3px; font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        .content { padding: 60px 40px; }
+        .greeting {
+            font-size: 24px; color: #009E89;
+            margin-bottom: 25px; font-weight: 300;
+        }
+        .description {
+            font-size: 15px; margin-bottom: 30px;
+            color: #4A5A5A;
+        }
+        .highlight {
+            color: #00A390; font-weight: 600;
+        }
+
+        .doc-box {
+            background: linear-gradient(135deg, #E8FFF7 0%, #F4FFFB 100%);
+            border: 2px solid #A6EDE1;
+            padding: 35px; border-radius: 12px;
+            margin-bottom: 40px;
+        }
+        .doc-title {
+            font-size: 20px; font-weight: 600;
+            color: #009E89; margin-bottom: 15px;
+        }
+        .doc-item {
+            font-size: 14px; color: #3F5555;
+            margin-bottom: 10px;
+        }
+
+        .action-box {
+            background: #E9F8FF; padding: 35px;
+            border-radius: 12px; text-align: center;
+            border: 2px solid #66A8FF;
+        }
+        .action-link {
+            color: #357BFF; text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid #00C49A;
+            padding-bottom: 2px; transition: .3s;
+        }
+        .action-link:hover {
+            color: #00C49A; border-bottom-color: #357BFF;
+        }
+
+        .footer {
+            background: #EEFFF8; padding: 45px;
+            text-align: center;
+            border-top: 2px solid #00C49A;
+        }
+        .footer-text {
+            font-size: 12px; color: #009E89;
+        }
+    </style>
+</head>
+
+<body>
+<table width="100%">
+    <tr><td align="center" style="padding: 30px 10px;">
+        <table class="container">
+
+            <tr><td class="header">
+                <div class="logo">{{brandName}}</div>
+            </td></tr>
+
+            <tr><td class="content">
+
+                <p class="greeting">Xin chào <b>{{studentName}}</b>,</p>
+
+                <p class="description">
+                    Tin vui! Khóa học <b>{{courseName}}</b> vừa được cập nhật  
+                    thêm một <span class="highlight">tài liệu mới</span> dành cho bạn.
+                </p>
+
+                <div class="doc-box">
+                    <div class="doc-title">Thông tin tài liệu mới</div>
+                    <p class="doc-item">📘 Tiêu đề: <b>{{documentTitle}}</b></p>
+                    <p class="doc-item">📁 Loại tài liệu: {{documentType}}</p>
+                    <p class="doc-item">🕒 Ngày cập nhật: <b>{{updateDate}}</b></p>
+                </div>
+
+                <div class="action-box">
+                    <p>Nhấn để xem tài liệu:</p>
+                    <a href="{{documentLink}}" class="action-link">Xem tài liệu</a>
+                </div>
+
+                <p class="description">
+                    Hãy đọc tài liệu sớm để không bỏ lỡ nội dung quan trọng nhé!  
+                    Chúc bạn học tập thật hiệu quả 🌿✨
+                </p>
+
+            </td></tr>
+
+            <tr><td class="footer">
+                <p class="footer-text">© {{year}} {{brandName}}. Mọi quyền được bảo lưu.</p>
+            </td></tr>
+
+        </table>
+    </td></tr>
+</table>
+</body>
+</html>

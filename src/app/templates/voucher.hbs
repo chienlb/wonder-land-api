@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khuyến mãi – Voucher đặc biệt dành cho bạn</title>
+
+    <style>
+        body {
+            margin: 0; padding: 0;
+            background: #F7F7FF;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #3a3a3a;
+        }
+
+        .container {
+            max-width: 580px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 18px rgba(124, 112, 255, 0.12);
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, #6C63FF 0%, #66C6FF 100%);
+            padding: 60px 40px;
+            text-align: center;
+        }
+        .logo {
+            font-size: 20px;
+            color: #fff;
+            letter-spacing: 3px;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        /* CONTENT */
+        .content {
+            padding: 60px 40px;
+        }
+        .greeting {
+            font-size: 24px;
+            color: #6A5ACD;
+            font-weight: 300;
+            margin-bottom: 25px;
+        }
+        .description {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+        .highlight {
+            color: #6C63FF;
+            font-weight: 600;
+        }
+
+        /* VOUCHER BOX */
+        .voucher-box {
+            background: linear-gradient(135deg, #FFF1F2 0%, #FFF8FF 100%);
+            padding: 35px;
+            border-radius: 12px;
+            border: 2px solid #FFB6CE;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 16px rgba(255, 129, 168, 0.15);
+            text-align: center;
+        }
+        .voucher-title {
+            font-size: 22px;
+            color: #FF6FAE;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .voucher-code {
+            display: inline-block;
+            font-size: 24px;
+            font-weight: 700;
+            color: #6C63FF;
+            background: #F2F0FF;
+            padding: 14px 25px;
+            border-radius: 8px;
+            border: 2px dashed #A79BFF;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+        }
+        .voucher-detail {
+            font-size: 14px;
+            color: #444;
+            margin-top: 10px;
+        }
+
+        /* CTA */
+        .action-box {
+            background: linear-gradient(135deg, #EAF3FF 0%, #F3F8FF 100%);
+            padding: 35px;
+            border-radius: 10px;
+            border: 2px solid #66A8FF;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .action-text {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .action-link {
+            color: #357BFF;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid #6C63FF;
+            padding-bottom: 2px;
+            transition: .3s;
+        }
+        .action-link:hover {
+            color: #6C63FF;
+            border-bottom-color: #357BFF;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #6C63FF, transparent);
+            margin: 40px 0;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: linear-gradient(135deg, #EEF1FF 0%, #F4F7FF 100%);
+            padding: 50px 40px;
+            text-align: center;
+            border-top: 2px solid #6C63FF;
+        }
+        .footer-text {
+            font-size: 12px;
+            color: #6A5ACD;
+            margin-bottom: 12px;
+        }
+        .footer-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #FFD54F, transparent);
+            margin: 25px 0;
+        }
+
+        @media (max-width: 600px) {
+            .content, .header, .footer { padding: 40px 25px; }
+            .voucher-box, .action-box { padding: 25px; }
+        }
+    </style>
+</head>
+
+<body>
+<table width="100%" role="presentation">
+    <tr>
+        <td align="center" style="padding: 30px 10px;">
+            <table class="container" role="presentation">
+
+                <!-- HEADER -->
+                <tr>
+                    <td class="header">
+                        <div class="logo">{{brandName}}</div>
+                    </td>
+                </tr>
+
+                <!-- CONTENT -->
+                <tr>
+                    <td class="content">
+
+                        <p class="greeting">Xin chào <b>{{customerName}}</b>,</p>
+
+                        <p class="description">
+                            Chúng tôi gửi tặng bạn một <span class="highlight">voucher ưu đãi đặc biệt</span>  
+                            để cảm ơn bạn đã luôn đồng hành cùng {{brandName}}.
+                        </p>
+
+                        <!-- VOUCHER BOX -->
+                        <div class="voucher-box">
+                            <div class="voucher-title">{{voucherTitle}}</div>
+                            <div class="voucher-code">{{voucherCode}}</div>
+                            <p class="voucher-detail">
+                                Giá trị ưu đãi: <span class="highlight">{{voucherValue}}</span><br>
+                                Hạn sử dụng: <b>{{expiredDate}}</b>
+                            </p>
+                        </div>
+
+                        <!-- CTA -->
+                        <div class="action-box">
+                            <p class="action-text">Nhấn vào đây để sử dụng voucher của bạn:</p>
+                            <a href="{{voucherLink}}" class="action-link">Sử dụng ngay</a>
+                        </div>
+
+                        <p class="description">
+                            Đừng bỏ lỡ ưu đãi này!  
+                            Chúc bạn có trải nghiệm tuyệt vời cùng chúng tôi 💙
+                        </p>
+
+                        <div class="divider"></div>
+
+                    </td>
+                </tr>
+
+                <!-- FOOTER -->
+                <tr>
+                    <td class="footer">
+                        <p class="footer-text">© {{year}} {{brandName}}. Mọi quyền được bảo lưu.</p>
+                        <div class="footer-divider"></div>
+                        <p class="footer-text">
+                            <a href="{{supportLink}}" style="color:#6A5ACD; text-decoration:none;">Liên hệ hỗ trợ</a>
+                        </p>
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

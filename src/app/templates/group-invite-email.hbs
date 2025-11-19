@@ -11,14 +11,9 @@
         font-family:
           'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', 'Trebuchet MS', Arial,
           sans-serif;
-        background: linear-gradient(
-          135deg,
-          #f0f8ff 0%,
-          #fffacd 50%,
-          #fff0f5 100%
-        );
+        background-color: #f5f7ff;
         line-height: 1.8;
-        color: #333333;
+        color: #2e2a32;
       }
       table {
         border-collapse: collapse;
@@ -33,109 +28,117 @@
         max-width: 600px;
         margin: 0 auto;
         background-color: #ffffff;
-        box-shadow: 0 8px 24px rgba(168, 216, 234, 0.15);
+        box-shadow: 0 20px 60px rgba(175, 138, 255, 0.15);
         border-radius: 24px;
         overflow: hidden;
-        border: 4px solid #a8d8ea;
+        border: 4px solid #ffe1f0;
       }
       .header {
-        background: linear-gradient(
-          135deg,
-          #a8d8ea 0%,
-          #b5e5cf 50%,
-          #a8d8ea 100%
-        );
-        padding: 50px 30px 40px;
+        background: linear-gradient(120deg, #ff6fb7 0%, #ffa56f 100%);
+        padding: 55px 30px 45px;
         text-align: center;
         position: relative;
-        border-bottom: 6px dashed #ffffff;
+        border-bottom: 6px dashed rgba(255, 255, 255, 0.7);
+      }
+      .header::before,
+      .header::after {
+        font-size: 48px;
+        position: absolute;
+        top: 18px;
       }
       .header::before {
         content: '👥';
-        font-size: 50px;
-        position: absolute;
-        top: 15px;
         left: 30px;
-        animation: gentle-bounce 3s infinite;
       }
       .header::after {
         content: '🎉';
-        font-size: 50px;
-        position: absolute;
-        top: 15px;
         right: 30px;
-        animation: gentle-bounce 3s infinite 0.5s;
-      }
-      @keyframes gentle-bounce {
-        0%,
-        100% {
-          transform: translateY(0);
-        }
-        50% {
-          transform: translateY(-5px);
-        }
       }
       .logo {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
         font-size: 32px;
         font-weight: 700;
         color: #ffffff;
-        text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
-        letter-spacing: 2px;
+        text-shadow: 0 8px 20px rgba(255, 111, 183, 0.35);
+        letter-spacing: 1px;
         margin: 0;
       }
+      .logo-image {
+        width: 56px;
+        height: 56px;
+        border-radius: 18px;
+        border: 3px solid rgba(255, 255, 255, 0.8);
+        padding: 6px;
+        box-shadow: 0 10px 25px rgba(44, 19, 56, 0.2);
+        background-color: rgba(255, 255, 255, 0.25);
+        object-fit: contain;
+        display: inline-block;
+      }
+      .logo-text {
+        letter-spacing: 2px;
+      }
       .content {
-        padding: 40px 35px;
+        padding: 45px 40px;
         background: #ffffff;
+        background-image:
+          radial-gradient(
+            circle at top right,
+            rgba(255, 237, 213, 0.35),
+            transparent 55%
+          ),
+          radial-gradient(
+            circle at bottom left,
+            rgba(197, 224, 255, 0.35),
+            transparent 55%
+          );
       }
       .emoji-large {
         font-size: 56px;
         text-align: center;
         margin: 20px 0;
         line-height: 1;
-        animation: pulse 2s infinite;
-      }
-      @keyframes pulse {
-        0%,
-        100% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.1);
-        }
       }
       .greeting {
         font-size: 28px;
         font-weight: 700;
-        color: #a8d8ea;
+        color: #ff6fb7;
         margin: 20px 0 25px 0;
         text-align: center;
-        text-shadow: 2px 2px 0px rgba(255, 250, 205, 0.3);
+        text-shadow: 0 6px 18px rgba(255, 111, 183, 0.25);
       }
       .description {
         font-size: 18px;
-        color: #555555;
+        color: #5f6175;
         line-height: 2;
-        margin: 0 0 30px 0;
+        margin: 0 0 32px 0;
         text-align: center;
       }
       .highlight {
-        color: #ffb6c1;
+        color: #ff6fb7;
         font-weight: 700;
-        background: linear-gradient(120deg, #fffacd 0%, #fffacd 100%);
+        background: #ffebf5;
         padding: 3px 10px;
         border-radius: 10px;
         display: inline-block;
-        border: 2px solid #ffd4a6;
+        border: 2px solid #ffd4e5;
       }
       .group-card {
-        background: linear-gradient(135deg, #fff0f5 0%, #f0f8ff 100%);
-        border: 4px dashed #ffb6c1;
-        padding: 40px 30px;
-        border-radius: 20px;
+        background: linear-gradient(
+          135deg,
+          #ffeff9 0%,
+          #fffbec 45%,
+          #edf7ff 100%
+        );
+        border: 4px dashed #ffb0d6;
+        padding: 42px 32px;
+        border-radius: 22px;
         margin: 40px 0;
         position: relative;
         text-align: center;
-        box-shadow: 0 6px 20px rgba(255, 182, 193, 0.2);
+        box-shadow: 0 16px 32px rgba(255, 182, 193, 0.25);
       }
       .group-card::before {
         content: '🎊';
@@ -147,7 +150,7 @@
         background: #ffffff;
         padding: 8px;
         border-radius: 50%;
-        border: 4px solid #fffacd;
+        border: 4px solid #ffe1f0;
       }
       .group-icon {
         font-size: 56px;
@@ -156,72 +159,29 @@
       }
       .group-name {
         font-size: 26px;
-        color: #a8d8ea;
+        color: #ff6fb7;
         font-weight: 700;
         margin: 20px 0 18px 0;
-        text-shadow: 2px 2px 0px rgba(255, 250, 205, 0.3);
+        text-shadow: 0 6px 18px rgba(255, 111, 183, 0.25);
       }
       .group-description {
         font-size: 16px;
-        color: #666666;
+        color: #5f6175;
         line-height: 2;
         margin: 0;
-      }
-      .members-section {
-        margin: 40px 0;
-        background: linear-gradient(135deg, #f0f8ff 0%, #fff5f0 100%);
-        border: 3px solid #b5e5cf;
-        padding: 30px;
-        border-radius: 20px;
-        box-shadow: 0 6px 15px rgba(181, 229, 207, 0.2);
-        position: relative;
-      }
-      .members-section::before {
-        content: '👫';
-        position: absolute;
-        top: -25px;
-        left: 30px;
-        font-size: 40px;
-        background: #ffffff;
-        padding: 8px;
-        border-radius: 50%;
-        border: 4px solid #fffacd;
-      }
-      .members-title {
-        font-size: 18px;
-        color: #a8d8ea;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        margin: 20px 0 25px 0;
-        font-weight: 700;
-        text-align: center;
-      }
-      .member-item {
-        font-size: 17px;
-        color: #555555;
-        margin: 0 0 15px 0;
-        padding-left: 30px;
-        position: relative;
-        line-height: 1.8;
-      }
-      .member-item::before {
-        content: '👤';
-        position: absolute;
-        left: 0;
-        font-size: 20px;
       }
       .action-section {
         margin: 40px 0;
         text-align: center;
-        background: linear-gradient(135deg, #fffacd 0%, #fff0f5 100%);
-        padding: 30px;
-        border-radius: 20px;
-        border: 3px solid #fffacd;
-        box-shadow: 0 6px 15px rgba(255, 250, 205, 0.2);
+        background: linear-gradient(135deg, #ffeff9 0%, #eaf5ff 100%);
+        padding: 32px;
+        border-radius: 22px;
+        border: 3px dashed #ffb0d6;
+        box-shadow: 0 12px 28px rgba(255, 179, 219, 0.18);
       }
       .action-text {
         font-size: 18px;
-        color: #555555;
+        color: #5f6175;
         line-height: 2;
         margin: 0 0 20px 0;
         font-weight: 600;
@@ -232,30 +192,30 @@
         text-decoration: none;
         font-weight: 700;
         font-size: 20px;
-        padding: 15px 35px;
-        background: linear-gradient(135deg, #a8d8ea, #b5e5cf);
-        border-radius: 30px;
+        padding: 16px 38px;
+        background: linear-gradient(135deg, #ff6fb7, #ffa56f);
+        border-radius: 32px;
         border: 4px solid #ffffff;
-        box-shadow: 0 6px 20px rgba(168, 216, 234, 0.25);
+        box-shadow: 0 12px 26px rgba(255, 111, 183, 0.35);
         transition: all 0.3s;
-        text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+        text-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
       }
       .action-link:hover {
-        transform: scale(1.1);
-        box-shadow: 0 8px 25px rgba(168, 216, 234, 0.3);
+        transform: scale(1.08);
+        box-shadow: 0 16px 32px rgba(255, 111, 183, 0.35);
       }
       .divider {
         height: 4px;
         background: repeating-linear-gradient(
           90deg,
-          #a8d8ea 0px,
-          #a8d8ea 10px,
-          #fffacd 10px,
-          #fffacd 20px,
-          #b5e5cf 20px,
-          #b5e5cf 30px,
-          #a8d8ea 30px,
-          #a8d8ea 40px
+          #ff6fb7 0px,
+          #ff6fb7 10px,
+          #ffa56f 10px,
+          #ffa56f 20px,
+          #7ad9f5 20px,
+          #7ad9f5 30px,
+          #a175ff 30px,
+          #a175ff 40px
         );
         margin: 40px 0;
         border-radius: 2px;
@@ -268,18 +228,18 @@
       }
       .footer {
         background: linear-gradient(
-          135deg,
-          #f0f8ff 0%,
-          #fffacd 50%,
-          #f0f8ff 100%
+          140deg,
+          #fdf2ff 0%,
+          #f0f4ff 45%,
+          #eafcff 100%
         );
-        padding: 40px 30px;
+        padding: 42px 30px;
         text-align: center;
-        border-top: 4px dashed #a8d8ea;
+        border-top: 4px dashed #ffd4f0;
       }
       .footer-text {
         font-size: 14px;
-        color: #666666;
+        color: #5f6175;
         margin: 0 0 15px 0;
         line-height: 2;
       }
@@ -287,29 +247,29 @@
         height: 3px;
         background: repeating-linear-gradient(
           90deg,
-          #a8d8ea 0px,
-          #a8d8ea 8px,
-          #fffacd 8px,
-          #fffacd 16px,
-          #b5e5cf 16px,
-          #b5e5cf 24px,
-          #a8d8ea 24px,
-          #a8d8ea 32px
+          #ff6fb7 0px,
+          #ff6fb7 8px,
+          #ffa56f 8px,
+          #ffa56f 16px,
+          #7ad9f5 16px,
+          #7ad9f5 24px,
+          #a175ff 24px,
+          #a175ff 32px
         );
         margin: 25px 0;
         border-radius: 2px;
       }
       .leave-link {
-        color: #ffb6c1;
+        color: #41b8f0;
         text-decoration: none;
         font-weight: 700;
         font-size: 16px;
-        border-bottom: 3px solid #fffacd;
+        border-bottom: 3px solid #ffe66d;
         padding-bottom: 2px;
       }
       .leave-link:hover {
-        color: #ffc0cb;
-        border-bottom-color: #ffb6c1;
+        color: #0996d4;
+        border-bottom-color: #ffb0d6;
       }
       @media (max-width: 600px) {
         .content {
@@ -342,11 +302,21 @@
   <body>
     <table role='presentation'>
       <tr>
-        <td align='center' style='padding: 30px 10px;'>
+        <td
+          align='center'
+          style='padding: 30px 10px; background-color: #f5f7ff;'
+        >
           <table role='presentation' class='container'>
             <tr>
               <td class='header'>
-                <div class='logo'>👥 {{brandName}} 🎉</div>
+                <div class='logo'>
+                  <img
+                    src='../assets/images/logo.png'
+                    alt='LunguaKids logo'
+                    class='logo-image'
+                  />
+                  <span class='logo-text'>LunguaKids</span>
+                </div>
               </td>
             </tr>
             <tr>
@@ -365,12 +335,6 @@
                   <div class='group-icon'>👥</div>
                   <div class='group-name'>{{groupName}}</div>
                   <div class='group-description'>{{groupDescription}}</div>
-                </div>
-                <div class='members-section'>
-                  <p class='members-title'>👫 Danh sách thành viên nhóm</p>
-                  {{#each groupMembers}}
-                    <div class='member-item'>{{this.name}}</div>
-                  {{/each}}
                 </div>
                 <div class='divider'></div>
                 <div class='action-section'>
@@ -404,7 +368,7 @@
                   <a href='{{leaveGroupLink}}' class='leave-link'>🚪 Rời khỏi
                     nhóm</a>
                 </p>
-                <p style='font-size: 12px; color: #999999; margin: 20px 0 0 0;'>
+                <p style='font-size: 12px; color: #8b8b9a; margin: 20px 0 0 0;'>
                   💝 Cảm ơn bạn đã tin tưởng
                   {{brandName}}! 💝
                 </p>

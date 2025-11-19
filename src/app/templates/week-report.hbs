@@ -11,14 +11,9 @@
         font-family:
           'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', 'Trebuchet MS', Arial,
           sans-serif;
-        background: linear-gradient(
-          135deg,
-          #f0f8ff 0%,
-          #fffacd 50%,
-          #e0f5e8 100%
-        );
+        background-color: #f5f7ff;
         line-height: 1.8;
-        color: #333333;
+        color: #2e2a32;
       }
       table {
         border-collapse: collapse;
@@ -33,232 +28,185 @@
         max-width: 600px;
         margin: 0 auto;
         background-color: #ffffff;
-        box-shadow: 0 8px 24px rgba(181, 229, 207, 0.15);
+        box-shadow: 0 20px 60px rgba(175, 138, 255, 0.15);
         border-radius: 24px;
         overflow: hidden;
-        border: 4px solid #b5e5cf;
+        border: 4px solid #ffe1f0;
       }
       .header {
-        background: linear-gradient(
-          135deg,
-          #b5e5cf 0%,
-          #a8d8ea 50%,
-          #b5e5cf 100%
-        );
-        padding: 50px 30px 40px;
+        background: linear-gradient(120deg, #ff6fb7 0%, #ffa56f 100%);
+        padding: 55px 30px 45px;
         text-align: center;
         position: relative;
-        border-bottom: 6px dashed #ffffff;
+        border-bottom: 6px dashed rgba(255, 255, 255, 0.7);
       }
       .header::before {
         content: '📊';
-        font-size: 50px;
+        font-size: 48px;
         position: absolute;
-        top: 15px;
+        top: 18px;
         left: 30px;
-        animation: gentle-bounce 3s infinite;
       }
       .header::after {
         content: '📈';
-        font-size: 50px;
+        font-size: 48px;
         position: absolute;
-        top: 15px;
+        top: 18px;
         right: 30px;
-        animation: gentle-bounce 3s infinite 0.5s;
-      }
-      @keyframes gentle-bounce {
-        0%,
-        100% {
-          transform: translateY(0);
-        }
-        50% {
-          transform: translateY(-5px);
-        }
       }
       .logo {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
         font-size: 32px;
         font-weight: 700;
         color: #ffffff;
-        text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
-        letter-spacing: 2px;
+        text-shadow: 0 8px 20px rgba(255, 111, 183, 0.35);
+        letter-spacing: 1px;
         margin: 0;
       }
+      .logo-image {
+        width: 56px;
+        height: 56px;
+        border-radius: 18px;
+        border: 3px solid rgba(255, 255, 255, 0.8);
+        padding: 6px;
+        box-shadow: 0 10px 25px rgba(44, 19, 56, 0.2);
+        background-color: rgba(255, 255, 255, 0.25);
+        object-fit: contain;
+        display: inline-block;
+      }
+      .logo-text {
+        letter-spacing: 2px;
+      }
       .content {
-        padding: 40px 35px;
+        padding: 45px 40px;
         background: #ffffff;
+        background-image:
+          radial-gradient(
+            circle at top right,
+            rgba(255, 237, 213, 0.35),
+            transparent 55%
+          ),
+          radial-gradient(
+            circle at bottom left,
+            rgba(197, 224, 255, 0.35),
+            transparent 55%
+          );
       }
       .emoji-large {
         font-size: 56px;
         text-align: center;
         margin: 20px 0;
         line-height: 1;
-        animation: pulse 2s infinite;
-      }
-      @keyframes pulse {
-        0%,
-        100% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.1);
-        }
       }
       .greeting {
         font-size: 28px;
         font-weight: 700;
-        color: #b5e5cf;
+        color: #ff6fb7;
         margin: 20px 0 25px 0;
         text-align: center;
-        text-shadow: 2px 2px 0px rgba(255, 250, 205, 0.3);
+        text-shadow: 0 6px 18px rgba(255, 111, 183, 0.25);
       }
       .description {
         font-size: 18px;
-        color: #555555;
+        color: #5f6175;
         line-height: 2;
-        margin: 0 0 30px 0;
+        margin: 0 0 32px 0;
         text-align: center;
       }
       .highlight {
         font-weight: 700;
-        color: #b5e5cf;
-        background: linear-gradient(120deg, #fffacd 0%, #fffacd 100%);
+        color: #ff6fb7;
+        background: #ffebf5;
         padding: 3px 10px;
         border-radius: 10px;
         display: inline-block;
-        border: 2px solid #a8d8ea;
+        border: 2px solid #ffd4e5;
       }
       .weekly-box {
-        background: linear-gradient(135deg, #f0f8ff 0%, #fff5f0 100%);
-        border: 4px dashed #b5e5cf;
-        border-radius: 20px;
-        padding: 35px 30px;
+        background: linear-gradient(
+          135deg,
+          #ffeff9 0%,
+          #fffbec 45%,
+          #edf7ff 100%
+        );
+        border: 4px dashed #ffb0d6;
+        border-radius: 22px;
+        padding: 38px 32px;
         margin: 40px 0;
-        position: relative;
-        box-shadow: 0 6px 20px rgba(181, 229, 207, 0.2);
+        box-shadow: 0 16px 32px rgba(255, 182, 193, 0.25);
         text-align: center;
-      }
-      .weekly-box::before {
-        content: '📅';
-        position: absolute;
-        top: -25px;
-        left: 30px;
-        font-size: 40px;
-        background: #ffffff;
-        padding: 8px;
-        border-radius: 50%;
-        border: 4px solid #fffacd;
       }
       .weekly-title {
         font-size: 22px;
-        color: #b5e5cf;
+        color: #ff6fb7;
         font-weight: 700;
         margin: 20px 0 25px 0;
         text-transform: uppercase;
         letter-spacing: 1px;
-        text-shadow: 2px 2px 0px rgba(255, 250, 205, 0.3);
+        text-shadow: 0 6px 18px rgba(255, 111, 183, 0.25);
       }
       .weekly-item {
         font-size: 17px;
-        color: #555555;
+        color: #5f6175;
         margin: 15px 0;
         line-height: 2;
-        padding-left: 25px;
-        position: relative;
         text-align: left;
       }
-      .weekly-item::before {
-        content: '✨';
-        position: absolute;
-        left: 0;
-        font-size: 20px;
-      }
       .weekly-item b {
-        color: #b5e5cf;
+        color: #ff6fb7;
         font-weight: 700;
-        background: #fffacd;
+        background: #ffebf5;
         padding: 3px 8px;
         border-radius: 8px;
-        border: 2px solid #a8d8ea;
+        border: 2px solid #ffd4e5;
       }
       .tips-box {
-        background: linear-gradient(135deg, #fffacd 0%, #fff5f0 100%);
-        border: 4px dashed #ffd4a6;
-        padding: 35px 30px;
-        border-radius: 20px;
+        background: linear-gradient(135deg, #eff5ff 0%, #fff2f0 100%);
+        border: 4px solid #fcdcf7;
+        padding: 36px 32px;
+        border-radius: 22px;
         margin: 40px 0;
-        position: relative;
-        box-shadow: 0 6px 20px rgba(255, 212, 166, 0.2);
+        box-shadow: 0 16px 30px rgba(112, 122, 255, 0.12);
         text-align: center;
-      }
-      .tips-box::before {
-        content: '💡';
-        position: absolute;
-        top: -25px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 40px;
-        background: #ffffff;
-        padding: 8px;
-        border-radius: 50%;
-        border: 4px solid #fffacd;
       }
       .tips-title {
         font-size: 20px;
-        color: #ffb6c1;
+        color: #41b8f0;
         font-weight: 700;
         margin: 20px 0 20px 0;
         text-transform: uppercase;
         letter-spacing: 1px;
-        text-shadow: 2px 2px 0px rgba(255, 250, 205, 0.3);
       }
       .tips-item {
         font-size: 17px;
-        color: #555555;
+        color: #5f6175;
         margin: 15px 0;
         line-height: 2;
-        padding-left: 25px;
-        position: relative;
         text-align: left;
       }
-      .tips-item::before {
-        content: '⭐';
-        position: absolute;
-        left: 0;
-        font-size: 20px;
-      }
       .tips-item b {
-        color: #ffb6c1;
+        color: #ff6fb7;
         font-weight: 700;
-        background: #fffacd;
+        background: #ffebf5;
         padding: 3px 8px;
         border-radius: 8px;
-        border: 2px solid #ffd4a6;
+        border: 2px solid #ffd4e5;
       }
       .action-box {
-        background: linear-gradient(135deg, #f0f8ff 0%, #fff5f0 100%);
-        padding: 35px 30px;
-        border-radius: 20px;
-        border: 3px solid #b5e5cf;
+        background: linear-gradient(135deg, #eff5ff 0%, #fff2f0 100%);
+        padding: 36px 32px;
+        border-radius: 22px;
+        border: 4px solid #fcdcf7;
         text-align: center;
         margin: 40px 0;
-        box-shadow: 0 6px 20px rgba(181, 229, 207, 0.2);
-        position: relative;
-      }
-      .action-box::before {
-        content: '🚀';
-        font-size: 40px;
-        position: absolute;
-        top: -25px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #ffffff;
-        padding: 8px;
-        border-radius: 50%;
-        border: 4px solid #fffacd;
+        box-shadow: 0 16px 30px rgba(112, 122, 255, 0.12);
       }
       .action-text {
         font-size: 18px;
-        color: #555555;
+        color: #5f6175;
         margin: 15px 0 20px 0;
         line-height: 2;
         font-weight: 600;
@@ -269,30 +217,30 @@
         text-decoration: none;
         font-weight: 700;
         font-size: 20px;
-        padding: 15px 35px;
-        background: linear-gradient(135deg, #b5e5cf, #a8d8ea);
-        border-radius: 30px;
+        padding: 16px 38px;
+        background: linear-gradient(135deg, #ff6fb7, #ffa56f);
+        border-radius: 32px;
         border: 4px solid #ffffff;
-        box-shadow: 0 6px 20px rgba(181, 229, 207, 0.25);
+        box-shadow: 0 12px 26px rgba(255, 111, 183, 0.35);
         transition: all 0.3s;
-        text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+        text-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
       }
       .action-link:hover {
-        transform: scale(1.1);
-        box-shadow: 0 8px 25px rgba(181, 229, 207, 0.3);
+        transform: scale(1.08);
+        box-shadow: 0 16px 32px rgba(255, 111, 183, 0.35);
       }
       .divider {
         height: 4px;
         background: repeating-linear-gradient(
           90deg,
-          #b5e5cf 0px,
-          #b5e5cf 10px,
-          #fffacd 10px,
-          #fffacd 20px,
-          #a8d8ea 20px,
-          #a8d8ea 30px,
-          #b5e5cf 30px,
-          #b5e5cf 40px
+          #ff6fb7 0px,
+          #ff6fb7 10px,
+          #ffa56f 10px,
+          #ffa56f 20px,
+          #7ad9f5 20px,
+          #7ad9f5 30px,
+          #a175ff 30px,
+          #a175ff 40px
         );
         margin: 40px 0;
         border-radius: 2px;
@@ -305,18 +253,18 @@
       }
       .footer {
         background: linear-gradient(
-          135deg,
-          #f0f8ff 0%,
-          #fffacd 50%,
-          #f0f8ff 100%
+          140deg,
+          #fdf2ff 0%,
+          #f0f4ff 45%,
+          #eafcff 100%
         );
-        padding: 40px 30px;
+        padding: 42px 30px;
         text-align: center;
-        border-top: 4px dashed #b5e5cf;
+        border-top: 4px dashed #ffd4f0;
       }
       .footer-text {
         font-size: 14px;
-        color: #666666;
+        color: #5f6175;
         margin: 0 0 15px 0;
         line-height: 2;
       }
@@ -324,29 +272,29 @@
         height: 3px;
         background: repeating-linear-gradient(
           90deg,
-          #b5e5cf 0px,
-          #b5e5cf 8px,
-          #fffacd 8px,
-          #fffacd 16px,
-          #a8d8ea 16px,
-          #a8d8ea 24px,
-          #b5e5cf 24px,
-          #b5e5cf 32px
+          #ff6fb7 0px,
+          #ff6fb7 8px,
+          #ffa56f 8px,
+          #ffa56f 16px,
+          #7ad9f5 16px,
+          #7ad9f5 24px,
+          #a175ff 24px,
+          #a175ff 32px
         );
         margin: 25px 0;
         border-radius: 2px;
       }
       .support-link {
-        color: #b5e5cf;
+        color: #41b8f0;
         text-decoration: none;
         font-weight: 700;
         font-size: 16px;
-        border-bottom: 3px solid #fffacd;
+        border-bottom: 3px solid #ffe66d;
         padding-bottom: 2px;
       }
       .support-link:hover {
-        color: #ffb6c1;
-        border-bottom-color: #ffb6c1;
+        color: #0996d4;
+        border-bottom-color: #ffb0d6;
       }
       @media (max-width: 600px) {
         .content {
@@ -385,11 +333,21 @@
   <body>
     <table width='100%' role='presentation'>
       <tr>
-        <td align='center' style='padding: 30px 10px;'>
+        <td
+          align='center'
+          style='padding: 30px 10px; background-color: #f5f7ff;'
+        >
           <table class='container' role='presentation'>
             <tr>
               <td class='header'>
-                <div class='logo'>📊 {{brandName}} 📈</div>
+                <div class='logo'>
+                  <img
+                    src='../assets/images/logo.png'
+                    alt='LunguaKids logo'
+                    class='logo-image'
+                  />
+                  <span class='logo-text'>LunguaKids</span>
+                </div>
               </td>
             </tr>
             <tr>
@@ -406,44 +364,51 @@
                 </p>
                 <div class='sparkles'>✨ ⭐ ✨</div>
                 <div class='weekly-box'>
-                  <div class='weekly-title'>📅 Tổng kết tuần</div>
-                  <p class='weekly-item'>📘 Khóa học: <b>{{courseName}}</b></p>
-                  <p class='weekly-item'>⏳ Thời gian học:
-                    <b>{{studyHours}} giờ</b></p>
-                  <p class='weekly-item'>⭐ Điểm nổi bật:
-                    <b>{{highlight}}</b></p>
+                  <div class='weekly-title'>Tổng kết tuần</div>
                   <p class='weekly-item'>
-                    🎯 Tiến độ hiện tại:
+                    Khóa học:
+                    <b>{{courseName}}</b>
+                  </p>
+                  <p class='weekly-item'>
+                    Thời gian học:
+                    <b>{{studyHours}} giờ</b>
+                  </p>
+                  <p class='weekly-item'>
+                    Điểm nổi bật:
+                    <b>{{highlight}}</b>
+                  </p>
+                  <p class='weekly-item'>
+                    Tiến độ hiện tại:
                     <b>{{completionRate}}%</b>
                   </p>
                   <p class='weekly-item'>
-                    📚 Bài hoàn thành tuần này:
+                    Bài hoàn thành tuần này:
                     <b>{{completedLessons}}</b>
                   </p>
                 </div>
                 <div class='tips-box'>
-                  <div class='tips-title'>💡 Gợi ý phương pháp học cho bạn</div>
+                  <div class='tips-title'>Gợi ý phương pháp học cho bạn</div>
                   <p class='tips-item'>
-                    📖 Học theo phương pháp:
+                    Học theo phương pháp:
                     <b>{{learningMethod}}</b>
                   </p>
                   <p class='tips-item'>
-                    💡 Gợi ý cải thiện:
+                    Gợi ý cải thiện:
                     <b>{{learningSuggestion}}</b>
                   </p>
                   <p class='tips-item'>
-                    🎯 Mục tiêu tuần tới:
+                    Mục tiêu tuần tới:
                     <b>{{nextWeekGoal}}</b>
                   </p>
                 </div>
                 <div class='divider'></div>
                 <div class='action-box'>
                   <p class='action-text'>
-                    🚀 Tiếp tục duy trì phong độ học tập tuyệt vời của bạn tại
-                    đây nhé!<br />
+                    Tiếp tục duy trì phong độ học tập tuyệt vời của bạn tại đây
+                    nhé!<br />
                     Hãy bấm vào đây để tiếp tục học!
                   </p>
-                  <a href='{{continueLink}}' class='action-link'>📖 Tiếp tục học</a>
+                  <a href='{{continueLink}}' class='action-link'>Tiếp tục học</a>
                 </div>
                 <p class='description'>
                   🌿 Chúc bạn có một tuần học tập hiệu quả và đầy cảm hứng! ✨<br
@@ -463,14 +428,13 @@
                 </p>
                 <div class='footer-divider'></div>
                 <p class='footer-text'>
-                  💭 Có thắc mắc gì không? Hãy
-                  <a href='{{supportLink}}' class='support-link'>💌 Liên hệ hỗ
-                    trợ</a>
+                  Có thắc mắc gì không? Hãy
+                  <a href='{{supportLink}}' class='support-link'>Liên hệ hỗ trợ</a>
                   ngay nhé!
                 </p>
-                <p style='font-size: 12px; color: #999999; margin: 20px 0 0 0;'>
-                  💝 Cảm ơn bạn đã tin tưởng
-                  {{brandName}}! 💝
+                <p style='font-size: 12px; color: #8b8b9a; margin: 20px 0 0 0;'>
+                  Cảm ơn bạn đã tin tưởng
+                  {{brandName}}!
                 </p>
               </td>
             </tr>

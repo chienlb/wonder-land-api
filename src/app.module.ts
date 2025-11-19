@@ -34,6 +34,7 @@ import { MailModule } from './app/configs/mail/mail.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthsModule } from './app/modules/auths/auths.module';
 import { MongoDBModule } from './app/configs/database/mongodb.config';
+import { CloudflareModule } from './app/modules/cloudflare/cloudflare.module';
 
 @Module({
   imports: [
@@ -74,6 +75,8 @@ import { MongoDBModule } from './app/configs/database/mongodb.config';
     }),
 
     AuthsModule,
+
+    CloudflareModule,
   ],
   controllers: [AppController],
   providers: [AppService],

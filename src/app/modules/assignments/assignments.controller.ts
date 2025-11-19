@@ -1,45 +1,237 @@
 import {
   Controller,
-  Get,
   Post,
+  Put,
   Body,
-  Patch,
+  UploadedFile,
+  UseInterceptors,
   Param,
   Delete,
+  Get,
+  Query,
 } from '@nestjs/common';
 import { AssignmentsService } from './assignments.service';
 import { CreateAssignmentDto } from './dto/create-assignment.dto';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBody,
+  ApiConsumes,
+  ApiProduces,
+  ApiResponse,
+} from '@nestjs/swagger';
+import { Assignment } from './schema/assignment.schema';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdateAssignmentDto } from './dto/update-assignment.dto';
 
 @Controller('assignments')
+@ApiTags('Assignments')
 export class AssignmentsController {
   constructor(private readonly assignmentsService: AssignmentsService) {}
 
   @Post()
-  create(@Body() createAssignmentDto: CreateAssignmentDto) {
-    return this.assignmentsService.create(createAssignmentDto);
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Create an assignment (upload file included)' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', example: 'Assignment 1' },
+        description: {
+          type: 'string',
+          example: 'Description of assignment',
+        },
+        type: { type: 'string', example: 'reading' },
+        lessonId: {
+          type: 'string',
+          example: '669999999999999999999999',
+        },
+        classId: {
+          type: 'string',
+          example: '669999999999999999999999',
+        },
+        dueDate: { type: 'string', example: '2025-12-31' },
+        maxScore: { type: 'number', example: 100 },
+        isPublished: { type: 'boolean', example: true },
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiProduces('application/json')
+  @ApiResponse({
+    status: 201,
+    description: 'Assignment created successfully',
+    type: Assignment,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  async create(
+    @Body() createAssignmentDto: CreateAssignmentDto,
+    @UploadedFile() file: any,
+  ) {
+    return this.assignmentsService.create(createAssignmentDto, file);
   }
 
-  @Get()
-  findAll() {
-    return this.assignmentsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.assignmentsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
+  @Put(':id')
+  @ApiOperation({ summary: 'Update an assignment' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', example: 'Assignment 1' },
+      },
+    },
+  })
+  @ApiProduces('application/json')
+  @ApiResponse({
+    status: 200,
+    description: 'Assignment updated successfully',
+    type: Assignment,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  async update(
     @Param('id') id: string,
     @Body() updateAssignmentDto: UpdateAssignmentDto,
   ) {
-    return this.assignmentsService.update(+id, updateAssignmentDto);
+    return this.assignmentsService.updateAssignment(id, updateAssignmentDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.assignmentsService.remove(+id);
+  @ApiOperation({ summary: 'Delete an assignment' })
+  @ApiResponse({
+    status: 200,
+    description: 'Assignment deleted successfully',
+    type: Assignment,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  async delete(@Param('id') id: string, @Body() updatedBy: string) {
+    return this.assignmentsService.deleteAssignment(id, updatedBy);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get an assignment by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Assignment retrieved successfully',
+    type: Assignment,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  async getById(@Param('id') id: string) {
+    return this.assignmentsService.getAssignmentById(id);
+  }
+
+  @Get('class/:classId')
+  @ApiOperation({ summary: 'Get assignments by class ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Assignments retrieved successfully',
+    type: [Assignment],
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  async getByClassId(
+    @Param('classId') classId: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Query('sort') sort: string = 'createdAt',
+    @Query('order') order: 'asc' | 'desc' = 'desc',
+  ) {
+    return this.assignmentsService.getAssignmentsByClassId(
+      classId,
+      page,
+      limit,
+      sort,
+      order,
+    );
+  }
+
+  @Get('lesson/:lessonId')
+  @ApiOperation({ summary: 'Get assignments by lesson ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Assignments retrieved successfully',
+    type: [Assignment],
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  async getByLessonId(
+    @Param('lessonId') lessonId: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Query('sort') sort: string = 'createdAt',
+    @Query('order') order: 'asc' | 'desc' = 'desc',
+  ) {
+    return this.assignmentsService.getAssignmentsByLessonId(
+      lessonId,
+      page,
+      limit,
+      sort,
+      order,
+    );
+  }
+
+  @Get('user/:userId')
+  @ApiOperation({ summary: 'Get assignments by user ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Assignments retrieved successfully',
+    type: [Assignment],
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  async getByUserId(
+    @Param('userId') userId: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Query('sort') sort: string = 'createdAt',
+    @Query('order') order: 'asc' | 'desc' = 'desc',
+  ) {
+    return this.assignmentsService.getAssignmentsByUserId(
+      userId,
+      page,
+      limit,
+      sort,
+      order,
+    );
+  }
+  @Get()
+  @ApiOperation({ summary: 'Get all assignments' })
+  @ApiResponse({
+    status: 200,
+    description: 'Assignments retrieved successfully',
+    type: [Assignment],
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  async getAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Query('sort') sort: string = 'createdAt',
+    @Query('order') order: 'asc' | 'desc' = 'desc',
+  ) {
+    return this.assignmentsService.getAllAssignments(page, limit, sort, order);
   }
 }

@@ -1,26 +1,241 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+import { Group, GroupDocument, GroupType, GroupVisibility } from './schema/group.schema';
 import { CreateGroupDto } from './dto/create-group.dto';
+import { UsersService } from '../users/users.service';
+import { UserAccountPackage } from '../users/schema/user.schema';
 import { UpdateGroupDto } from './dto/update-group.dto';
 
 @Injectable()
 export class GroupsService {
-  create(createGroupDto: CreateGroupDto) {
-    return 'This action adds a new group';
+  constructor(
+    @InjectModel(Group.name)
+    private groupRepository: Model<Group>,
+    private usersService: UsersService,
+  ) { }
+
+  async createGroup(createGroupDto: CreateGroupDto): Promise<GroupDocument> {
+    try {
+      const user = await this.usersService.findUserById(createGroupDto.owner);
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      if (createGroupDto.members && createGroupDto.members.length > 0) {
+        const members = await Promise.all(
+          createGroupDto.members.map(async (member) => {
+            const user = await this.usersService.findUserById(member);
+            if (!user) {
+              throw new NotFoundException('User not found');
+            }
+            return user._id;
+          }),
+        );
+        createGroupDto.members = members.map((member) => member.toString());
+      }
+      const typeOwner = user.accountPackage;
+      if (typeOwner === UserAccountPackage.FREE) {
+        createGroupDto.maxMembers = 10;
+      }
+      if (typeOwner === UserAccountPackage.STANDARD) {
+        createGroupDto.maxMembers = 20;
+      }
+      if (typeOwner === UserAccountPackage.PREMIUM) {
+        createGroupDto.maxMembers = 50;
+      }
+      if (typeOwner === UserAccountPackage.VIP) {
+        createGroupDto.maxMembers = 100;
+      }
+      const newGroup = new this.groupRepository({
+        ...createGroupDto,
+        owner: user._id,
+        members: createGroupDto.members,
+        school: createGroupDto.school,
+        classRef: createGroupDto.classRef,
+        subject: createGroupDto.subject,
+        maxMembers: createGroupDto.maxMembers,
+        isActive: true,
+        joinCode: createGroupDto.joinCode,
+        avatar: createGroupDto.avatar,
+        background: createGroupDto.background,
+      });
+      return await newGroup.save();
+    } catch (error) {
+      throw new Error('Failed to create group: ' + error.message);
+    }
   }
 
-  findAll() {
-    return `This action returns all groups`;
+  async findGroupById(id: string): Promise<GroupDocument> {
+    const group = await this.groupRepository.findById(id);
+    if (!group) {
+      throw new NotFoundException('Group not found');
+    }
+    return group;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} group`;
+  async findGroupsByUserId(userId: string): Promise<GroupDocument[]> {
+    const groups = await this.groupRepository.find({ members: userId });
+    if (!groups) {
+      throw new NotFoundException('Groups not found');
+    }
+    return groups;
   }
 
-  update(id: number, updateGroupDto: UpdateGroupDto) {
-    return `This action updates a #${id} group`;
+  async findGroupsBySchoolId(schoolId: string): Promise<GroupDocument[]> {
+    const groups = await this.groupRepository.find({ school: schoolId });
+    if (!groups) {
+      throw new NotFoundException('Groups not found');
+    }
+    return groups;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} group`;
+  async findGroupsByClassId(classId: string): Promise<GroupDocument[]> {
+    const groups = await this.groupRepository.find({ classRef: classId });
+    if (!groups) {
+      throw new NotFoundException('Groups not found');
+    }
+    return groups;
+  }
+
+  async findAllGroups(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{
+    data: GroupDocument[];
+    total: number;
+    totalPages: number;
+    nextPage: number;
+    prevPage: number;
+  }> {
+    try {
+      const groups = await this.groupRepository
+        .find()
+        .skip((page - 1) * limit)
+        .limit(limit);
+      const total = await this.groupRepository.countDocuments();
+      const totalPages = Math.ceil(total / limit);
+      const nextPage = page < totalPages ? page + 1 : null;
+      const prevPage = page > 1 ? page - 1 : null;
+      return {
+        data: groups as GroupDocument[],
+        total,
+        totalPages,
+        nextPage: nextPage ?? page,
+        prevPage: prevPage ?? page,
+      };
+    } catch (error) {
+      throw new Error('Failed to find all groups: ' + error.message);
+    }
+  }
+
+  async updateGroup(id: string, updateGroupDto: UpdateGroupDto): Promise<GroupDocument> {
+    try {
+      const updatedGroup = await this.groupRepository.findByIdAndUpdate(
+        new Types.ObjectId(id),
+        updateGroupDto,
+        { new: true, runValidators: true }
+      );
+
+      if (!updatedGroup) {
+        throw new NotFoundException('Group not found');
+      }
+
+      return updatedGroup;
+    } catch (error) {
+      if (error.name === 'CastError') {
+        throw new BadRequestException('Invalid group ID');
+      }
+
+      throw new InternalServerErrorException('Failed to update group');
+    }
+  }
+
+  async deleteGroup(id: string): Promise<GroupDocument> {
+    try {
+      const deletedGroup = await this.groupRepository.findByIdAndUpdate(
+        new Types.ObjectId(id),
+        { isActive: false },
+        { new: true }
+      );
+
+      if (!deletedGroup) {
+        throw new NotFoundException('Group not found');
+      }
+
+      return deletedGroup;
+    } catch (error) {
+      if (error.name === 'CastError') {
+        throw new BadRequestException('Invalid group ID');
+      }
+
+      throw new InternalServerErrorException('Failed to delete group');
+    }
+  }
+
+
+  async joinGroup(groupId: string, userId: string): Promise<GroupDocument> {
+    try {
+      const group = await this.findGroupById(groupId);
+      if (!group) {
+        throw new NotFoundException('Group not found');
+      }
+      const user = await this.usersService.findUserById(userId);
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      if (group.members.includes(user._id)) {
+        throw new BadRequestException('User already in group');
+      }
+      group.members.push(user._id);
+      return group.save();
+    } catch (error) {
+      throw new Error('Failed to join group: ' + error.message);
+    }
+  }
+
+  async leaveGroup(groupId: string, userId: string): Promise<GroupDocument> {
+    try {
+      const group = await this.findGroupById(groupId);
+      if (!group) {
+        throw new NotFoundException('Group not found');
+      }
+      const user = await this.usersService.findUserById(userId);
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      if (!group.members.includes(user._id)) {
+        throw new BadRequestException('User not in group');
+      }
+      group.members.splice(group.members.indexOf(user._id), 1);
+      return group.save();
+    } catch (error) {
+      throw new Error('Failed to leave group: ' + error.message);
+    }
+  }
+
+  async restoreGroup(groupId: string): Promise<GroupDocument> {
+    try {
+      const group = await this.findGroupById(groupId);
+      if (!group) {
+        throw new NotFoundException('Group not found');
+      }
+      group.isActive = true;
+      return group.save();
+    } catch (error) {
+      throw new Error('Failed to restore group: ' + error.message);
+    }
+  }
+
+  async changeGroupVisibility(groupId: string, visibility: GroupVisibility): Promise<GroupDocument> {
+    try {
+      const group = await this.findGroupById(groupId);
+      if (!group) {
+        throw new NotFoundException('Group not found');
+      }
+      group.visibility = visibility;
+      return group.save();
+    } catch (error) {
+      throw new Error('Failed to change group visibility: ' + error.message);
+    }
   }
 }

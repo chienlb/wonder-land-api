@@ -19,7 +19,7 @@ export interface IGroupMessage {
   type: MessageType; // Loại tin nhắn
   attachments?: string[]; // Tệp đính kèm (nếu có)
   mentions?: Types.ObjectId[]; // Người được nhắc
-  replyTo?: Types.ObjectId; // Tin nhắn được trả lời (nếu có)
+  replyTo?: Types.ObjectId; // Tin nhắn đang trả lời 1 tin nhắn khác (nếu có)
   readBy?: Types.ObjectId[]; // Danh sách người đã đọc
   isEdited?: boolean; // Đã sửa chưa
   editedAt?: Date; // Thời điểm sửa

@@ -22,6 +22,8 @@ import { UseGuards } from '@nestjs/common';
 @ApiTags('Groups')
 @ApiBearerAuth()
 @Controller('groups')
+@UseGuards(AuthGuard('jwt'))
+@Roles(UserRole.ADMIN, UserRole.TEACHER, UserRole.PARENT)
 export class GroupsController {
   constructor(private readonly groupsService: GroupsService) { }
 

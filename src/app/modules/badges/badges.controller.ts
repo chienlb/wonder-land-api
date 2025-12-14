@@ -1,13 +1,18 @@
-import { Controller, Query, HttpException, Get, Post, Body, Param, Put, Delete, Patch } from '@nestjs/common';
+import { Controller, Query, HttpException, Get, Post, Body, Param, Put, Delete, Patch, UseGuards } from '@nestjs/common';
 import { BadgesService } from './badges.service';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiBody, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { CreateBadgeDto } from './dto/create-badge.dto';
 import { UpdateBadgeDto } from './dto/update-badge.dto';
 import { BadgeType } from './schema/badge.schema';
+import { AuthGuard } from '@nestjs/passport';
+import { UserRole } from '../users/schema/user.schema';
+import { Roles } from 'src/app/common/decorators/role.decorator';
 
 @ApiTags('Badges')
 @ApiBearerAuth()
 @Controller('badges')
+@UseGuards(AuthGuard('jwt'))
+@Roles(UserRole.ADMIN)
 export class BadgesController {
   constructor(private readonly badgesService: BadgesService) { }
 

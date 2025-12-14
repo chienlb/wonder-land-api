@@ -7,6 +7,8 @@ import {
   InvitationCodeSchema,
 } from './schema/invitation-code.schema';
 import { UsersModule } from '../users/users.module';
+import { RedisModule } from '../../configs/redis/redis.module';
+import { RedisService } from '../../configs/redis/redis.service';
 
 @Module({
   imports: [
@@ -14,9 +16,10 @@ import { UsersModule } from '../users/users.module';
       { name: InvitationCode.name, schema: InvitationCodeSchema },
     ]),
     forwardRef(() => UsersModule),
+    RedisModule,
   ],
   controllers: [InvitationCodesController],
-  providers: [InvitationCodesService],
+  providers: [InvitationCodesService, RedisService],
   exports: [InvitationCodesService],
 })
-export class InvitationCodesModule {}
+export class InvitationCodesModule { }

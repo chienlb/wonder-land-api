@@ -1,6 +1,6 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { ClientSession, Connection, Model } from 'mongoose';
 import { Payment, PaymentDocument, PaymentStatus } from './schema/payment.schema';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { getClientIp } from 'request-ip';
@@ -23,6 +23,7 @@ export class PaymentsService {
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Purchase.name) private purchaseModel: Model<PurchaseDocument>,
     @InjectModel(Package.name) private packageModel: Model<PackageDocument>,
+    @InjectConnection() private readonly connection: Connection,
   ) { }
 
 
@@ -111,89 +112,136 @@ export class PaymentsService {
   }
 
 
-  private async activateServices(transactionId: string) {
-    // Find purchase
-    const purchase = await this.purchaseModel.findOne({ paymentId: transactionId });
-    if (!purchase) throw new NotFoundException('Purchase not found');
-
-    // Update purchase status
-    purchase.status = PurchaseStatus.SUCCESS;
-    await purchase.save();
-
-    this.logger.log(`[DEBUG] Purchase updated status to SUCCESS for transaction ID: ${transactionId}`);
-
-    // Find user
-    const user = await this.userModel.findById(purchase.userId);
-    if (!user) throw new NotFoundException('User not found');
-
-    const packagedId = purchase.packageId.toString();
-    if (!packagedId) throw new NotFoundException('Package not found');
-
-    const packageResult = await this.packageModel.findById(packagedId);
-    if (!packageResult) throw new NotFoundException('Package not found');
-
-    // Set user package
-    user.accountPackage = packageResult.type;
-
-    await user.save();
-
-    this.logger.log(`[DEBUG] User updated package to ${packageResult.type} for transaction ID: ${transactionId}`);
-
-    // Subscription (optional)
-    const subscription = await this.subscriptionModel.findOne({ paymentId: transactionId });
-    if (subscription) {
-      subscription.status = SubscriptionStatus.ACTIVE;
-      subscription.startDate = new Date();
-      subscription.endDate = new Date(new Date().setDate(new Date().getDate() + packageResult.durationInDays));
-      await subscription.save();
+  private async activateServices(transactionId: string, session: ClientSession) {
+    if (this.connection.readyState !== 1) {
+      throw new BadRequestException('Database not ready.');
     }
 
-    return { purchase, user, subscription };
+    const mongooseSession = await this.connection.startSession();
+    if (!session) {
+      mongooseSession.startTransaction();
+    }
+    try {
+      // Find purchase
+      const purchase = await this.purchaseModel.findOne({ paymentId: transactionId });
+      if (!purchase) throw new NotFoundException('Purchase not found');
+
+      // Update purchase status
+      purchase.status = PurchaseStatus.SUCCESS;
+      await purchase.save({ session: mongooseSession });
+
+      this.logger.log(`[DEBUG] Purchase updated status to SUCCESS for transaction ID: ${transactionId}`);
+
+      // Find user
+      const user = await this.userModel.findById(purchase.userId);
+      if (!user) throw new NotFoundException('User not found');
+
+      const packagedId = purchase.packageId.toString();
+      if (!packagedId) throw new NotFoundException('Package not found');
+
+      const packageResult = await this.packageModel.findById(packagedId);
+      if (!packageResult) throw new NotFoundException('Package not found');
+
+      // Set user package
+      user.accountPackage = packageResult.type;
+
+      await user.save({ session: mongooseSession });
+
+      this.logger.log(`[DEBUG] User updated package to ${packageResult.type} for transaction ID: ${transactionId}`);
+
+      // Subscription (optional)
+      const subscription = await this.subscriptionModel.findOne({ paymentId: transactionId });
+      if (subscription) {
+        subscription.status = SubscriptionStatus.ACTIVE;
+        subscription.startDate = new Date();
+        subscription.endDate = new Date(new Date().setDate(new Date().getDate() + packageResult.durationInDays));
+        await subscription.save({ session: mongooseSession });
+      }
+
+      return { purchase, user, subscription };
+    } catch (error) {
+      await mongooseSession.abortTransaction();
+      mongooseSession.endSession();
+      throw new Error('Failed to activate services: ' + error.message);
+    }
   }
 
 
-  async handleReturn(query: any) {
-    const env = envSchema.parse(process.env);
-
-    if (!this.verifyChecksum(query, env)) {
-      return { success: false, message: 'Invalid checksum' };
+  async handleReturn(query: any, session: ClientSession) {
+    if (this.connection.readyState !== 1) {
+      throw new BadRequestException('Database not ready.');
     }
 
-    const success = query.vnp_ResponseCode === '00';
-
-    if (success) {
-      await this.activateServices(query.vnp_TxnRef);
-      this.logger.log(`[DEBUG] Purchase activated successfully for transaction ID: ${query.vnp_TxnRef}`);
+    const mongooseSession = await this.connection.startSession();
+    if (!session) {
+      mongooseSession.startTransaction();
     }
+    try {
+      const env = envSchema.parse(process.env);
 
-    const payment = await this.paymentModel.findOneAndUpdate(
-      { transactionId: query.vnp_TxnRef },
-      { status: success ? PaymentStatus.SUCCESS : PaymentStatus.FAILED, paidAt: new Date() },
-      { new: true },
-    );
+      if (!this.verifyChecksum(query, env)) {
+        return { success: false, message: 'Invalid checksum' };
+      }
 
-    return { success, data: payment };
+      const success = query.vnp_ResponseCode === '00';
+
+      if (success) {
+        await this.activateServices(query.vnp_TxnRef, session);
+        this.logger.log(`[DEBUG] Purchase activated successfully for transaction ID: ${query.vnp_TxnRef}`);
+      }
+
+      const payment = await this.paymentModel.findOneAndUpdate(
+        { transactionId: query.vnp_TxnRef },
+        { status: success ? PaymentStatus.SUCCESS : PaymentStatus.FAILED, paidAt: new Date() },
+        { new: true },
+      );
+
+      return { success, data: payment };
+    } catch (error) {
+      await mongooseSession.abortTransaction();
+      mongooseSession.endSession();
+      throw new Error('Failed to handle return: ' + error.message);
+    }
   }
 
-  async handleWebhook(query: any) {
-    const env = envSchema.parse(process.env);
-
-    if (!this.verifyChecksum(query, env)) {
-      return { RspCode: '97', Message: 'Invalid checksum' };
+  async handleWebhook(query: any, session: ClientSession) {
+    if (this.connection.readyState !== 1) {
+      throw new BadRequestException('Database not ready.');
     }
 
-    const success = query.vnp_ResponseCode === '00';
-
-    if (success) {
-      await this.activateServices(query.vnp_TxnRef);
-      this.logger.log(`[DEBUG] Purchase activated successfully for transaction ID: ${query.vnp_TxnRef}`);
+    const mongooseSession = await this.connection.startSession();
+    if (!session) {
+      mongooseSession.startTransaction();
     }
+    try {
+      const env = envSchema.parse(process.env);
 
-    await this.paymentModel.findOneAndUpdate(
-      { transactionId: query.vnp_TxnRef },
-      { status: success ? PaymentStatus.SUCCESS : PaymentStatus.FAILED, paidAt: new Date() },
-    );
+      if (!this.verifyChecksum(query, env)) {
+        return { RspCode: '97', Message: 'Invalid checksum' };
+      }
 
-    return { RspCode: '00', Message: 'Confirm Success' };
+      const success = query.vnp_ResponseCode === '00';
+
+      if (success) {
+        await this.activateServices(query.vnp_TxnRef, session);
+        this.logger.log(`[DEBUG] Purchase activated successfully for transaction ID: ${query.vnp_TxnRef}`);
+      }
+
+      await this.paymentModel.findOneAndUpdate(
+        { transactionId: query.vnp_TxnRef },
+        { status: success ? PaymentStatus.SUCCESS : PaymentStatus.FAILED, paidAt: new Date() },
+      ).session(session);
+
+      return { RspCode: '00', Message: 'Confirm Success' };
+    } catch (error) {
+      await mongooseSession.abortTransaction();
+      mongooseSession.endSession();
+      throw new Error('Failed to handle webhook: ' + error.message);
+    }
+    finally {
+      if (mongooseSession) {
+        await mongooseSession.endSession();
+      }
+    }
   }
 }

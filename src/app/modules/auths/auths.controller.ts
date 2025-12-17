@@ -226,6 +226,7 @@ export class AuthsController {
   }
 
   @Post('change-password')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Change password' })
   @ApiBody({
     description: 'Change password',

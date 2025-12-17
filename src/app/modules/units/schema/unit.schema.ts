@@ -51,6 +51,7 @@ export interface IUnit {
   estimatedDuration?: number; // Thời gian học ước tính (phút)
   thumbnail?: string; // Ảnh minh họa
   banner?: string; // Ảnh banner (tùy chọn)
+  image?: string; // Ảnh đại diện của Unit
   tags?: string[]; // Tag: ["greetings", "A1", "self-learning"]
   isActive: UnitStatus; // Có hiển thị không
   createdBy: Types.ObjectId; // Người tạo
@@ -140,6 +141,9 @@ export class Unit implements IUnit {
 
   @Prop()
   banner?: string;
+
+  @Prop()
+  image?: string;
 
   @Prop({ type: [String], default: [] })
   tags?: string[];

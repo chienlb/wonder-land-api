@@ -61,6 +61,7 @@ export class UnitsController {
           estimatedDuration: 100,
           thumbnail: 'Thumbnail 1',
           banner: 'Banner 1',
+          image: 'https://example.com/image.jpg',
           tags: ['Tag 1', 'Tag 2'],
           isActive: true,
           createdBy: 'Created By 1',

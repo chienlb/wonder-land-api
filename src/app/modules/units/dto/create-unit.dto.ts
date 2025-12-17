@@ -98,6 +98,10 @@ export class CreateUnitDto {
     banner?: string;
 
     @IsOptional()
+    @IsString()
+    image?: string;
+
+    @IsOptional()
     @IsArray()
     @IsString({ each: true })
     tags?: string[];

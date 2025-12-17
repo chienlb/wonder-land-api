@@ -44,7 +44,6 @@ export class UsersController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Create a new user' })
   @ApiBody({
     description: 'Create a new user',

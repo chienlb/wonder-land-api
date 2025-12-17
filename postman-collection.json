@@ -17,7 +17,12 @@
           "name": "Register",
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/auths/register",
             "body": {
               "mode": "raw",
@@ -27,13 +32,35 @@
         },
         {
           "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.data && jsonData.data.accessToken) {",
+                  "        pm.collectionVariables.set('token', jsonData.data.accessToken);",
+                  "        console.log('Token saved:', jsonData.data.accessToken);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/auths/login",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"nguyenvana@example.com\",\n  \"password\": \"123456\",\n  \"deviceId\": \"device-1\",\n  \"typeDevice\": \"android\",\n  \"typeLogin\": \"email\"\n}"
+              "raw": "{\n  \"email\": \"nguyenvana@example.com\",\n  \"password\": \"123456\",\n  \"deviceId\": \"device-1\"\n}"
             }
           }
         },
@@ -41,18 +68,33 @@
           "name": "Verify Email",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/auths/verify-email",
-            "body": { "mode": "raw", "raw": "{ \"codeVerify\": \"123456\" }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codeVerify\": \"123456\",\n  \"email\": \"nguyenvana@example.com\"\n}"
+            }
           }
         },
         {
           "name": "Resend Verification Email",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/auths/resend-verification-email",
             "body": {
               "mode": "raw",
-              "raw": "{ \"email\": \"nguyenvana@example.com\" }"
+              "raw": "{\n  \"email\": \"nguyenvana@example.com\"\n}"
             }
           }
         },
@@ -60,10 +102,16 @@
           "name": "Forgot Password",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/auths/forgot-password",
             "body": {
               "mode": "raw",
-              "raw": "{ \"email\": \"nguyenvana@example.com\" }"
+              "raw": "{\n  \"email\": \"nguyenvana@example.com\"\n}"
             }
           }
         },
@@ -71,10 +119,16 @@
           "name": "Reset Password",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/auths/reset-password",
             "body": {
               "mode": "raw",
-              "raw": "{ \"codeVerify\": \"123456\", \"password\": \"newPass123\" }"
+              "raw": "{\n  \"codeVerify\": \"123456\",\n  \"email\": \"nguyenvana@example.com\",\n  \"password\": \"newPass123\"\n}"
             }
           }
         },
@@ -82,10 +136,20 @@
           "name": "Change Password",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/auths/change-password",
             "body": {
               "mode": "raw",
-              "raw": "{ \"email\": \"nguyenvana@example.com\", \"password\": \"123456\", \"codeVerify\": \"123456\" }"
+              "raw": "{\n  \"oldPassword\": \"123456\",\n  \"newPassword\": \"newPass123\"\n}"
             }
           }
         },
@@ -93,18 +157,41 @@
           "name": "Logout All Devices",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/auths/logout-all-devices",
-            "body": { "mode": "raw", "raw": "{ \"userId\": \"userid\" }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
           }
         },
         {
           "name": "Logout Device",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/auths/logout-device",
             "body": {
               "mode": "raw",
-              "raw": "{ \"userId\": \"userid\", \"deviceId\": \"device-1\" }"
+              "raw": "{\n  \"deviceId\": \"device-1\"\n}"
             }
           }
         },
@@ -112,10 +199,20 @@
           "name": "Logout Not Device",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/auths/logout-not-device",
             "body": {
               "mode": "raw",
-              "raw": "{ \"userId\": \"userid\", \"deviceId\": \"device-1\" }"
+              "raw": "{\n  \"deviceId\": \"device-1\"\n}"
             }
           }
         },
@@ -137,8 +234,17 @@
           "name": "Google One Tap",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/auths/google/one-tap",
-            "body": { "mode": "raw", "raw": "{ \"credential\": \"<token>\" }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"credential\": \"<google-id-token>\"\n}"
+            }
           }
         },
         {
@@ -153,6 +259,19 @@
           "request": {
             "method": "GET",
             "url": "{{baseUrl}}/auths/facebook/callback"
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/auths/profile"
           }
         }
       ]
@@ -225,10 +344,16 @@
           "name": "Create Token",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/tokens",
             "body": {
               "mode": "raw",
-              "raw": "{ \"userId\": \"\", \"token\": \"\", \"deviceId\": \"\", \"typeDevice\": \"\", \"typeLogin\": \"\", \"isDeleted\": false }"
+              "raw": "{\n  \"userId\": \"\",\n  \"token\": \"\",\n  \"deviceId\": \"\",\n  \"isDeleted\": false\n}"
             }
           }
         }
@@ -385,53 +510,135 @@
           "name": "Create Group",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/groups",
             "body": {
               "mode": "raw",
-              "raw": "{ \"groupName\": \"Group A\", \"description\": \"\", \"slug\": \"group-a\", \"type\": \"study\", \"visibility\": \"public\", \"owner\": \"<userId>\", \"members\": [], \"isActive\": true }"
+              "raw": "{\n  \"groupName\": \"Group A\",\n  \"description\": \"Group description\",\n  \"slug\": \"group-a\",\n  \"type\": \"study\",\n  \"visibility\": \"public\",\n  \"owner\": \"<userId>\",\n  \"members\": [],\n  \"isActive\": true\n}"
             }
           }
         },
         {
           "name": "Get Group",
-          "request": { "method": "GET", "url": "{{baseUrl}}/groups/:id" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/groups/:id"
+          }
         },
         {
           "name": "List Groups",
-          "request": { "method": "GET", "url": "{{baseUrl}}/groups" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/groups"
+          }
         },
         {
           "name": "Update Group",
           "request": {
             "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/groups/:id",
-            "body": { "mode": "raw", "raw": "{ \"description\": \"Updated\" }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated\"\n}"
+            }
           }
         },
         {
           "name": "Delete Group",
-          "request": { "method": "DELETE", "url": "{{baseUrl}}/groups/:id" }
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/groups/:id"
+          }
         },
         {
           "name": "Join Group",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/groups/:groupId/join",
-            "body": { "mode": "raw", "raw": "{ \"userId\": \"<userId>\" }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"<userId>\"\n}"
+            }
           }
         },
         {
           "name": "Leave Group",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/groups/:groupId/leave",
-            "body": { "mode": "raw", "raw": "{ \"userId\": \"<userId>\" }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"<userId>\"\n}"
+            }
           }
         },
         {
           "name": "Restore Group",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
             "url": "{{baseUrl}}/groups/:groupId/restore"
           }
         },
@@ -439,8 +646,21 @@
           "name": "Change Visibility",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/groups/:groupId/change-visibility",
-            "body": { "mode": "raw", "raw": "{ \"visibility\": \"public\" }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"visibility\": \"public\"\n}"
+            }
           }
         }
       ]
@@ -543,10 +763,20 @@
           "name": "Create Unit",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/units",
             "body": {
               "mode": "raw",
-              "raw": "{ \"name\": \"Unit 1\", \"description\": \"\", \"topic\": \"Topic\", \"slug\": \"unit-1\", \"skill\": \"skill\", \"grade\": \"6\", \"level\": \"A1\", \"difficulty\": \"easy\", \"totalLessons\": 5, \"objectives\": [\"obj1\"], \"keyVocabulary\": [\"word\"], \"grammarFocus\": [\"grammar\"], \"keyExpressions\": [\"expr\"], \"materials\": {}, \"lessons\": [], \"isActive\": \"active\", \"createdBy\": \"\", \"updatedBy\": \"\" }"
+              "raw": "{\n  \"name\": \"Unit 1\",\n  \"description\": \"Unit description\",\n  \"topic\": \"Topic\",\n  \"slug\": \"unit-1\",\n  \"skill\": \"skill\",\n  \"grade\": \"6\",\n  \"level\": \"A1\",\n  \"difficulty\": \"easy\",\n  \"totalLessons\": 5,\n  \"objectives\": [\"obj1\"],\n  \"keyVocabulary\": [\"word\"],\n  \"grammarFocus\": [\"grammar\"],\n  \"keyExpressions\": [\"expr\"],\n  \"materials\": {},\n  \"lessons\": [],\n  \"isActive\": \"active\",\n  \"createdBy\": \"\",\n  \"updatedBy\": \"\",\n  \"image\": \"https://example.com/image.jpg\"\n}"
             }
           }
         },
@@ -579,11 +809,20 @@
           "name": "Create Lesson",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/lessons",
             "body": {
               "mode": "raw",
-              "raw": "{ \"title\": \"Lesson 1\", \"slug\": \"lesson-1\", \"description\": \"\", \"type\": \"VOCABULARY\", \"level\": \"A1\", \"orderIndex\": 1, \"unit\": \"\", \"topic\": \"Topic\", \"skillFocus\": \"VOCABULARY\", \"content\": { \"vocabulary\": { \"words\": [\"apple\"], \"definitions\": [\"\"], \"images\": [], \"audioFiles\": [] }, \"exercises\": [] }, \"locked\": false, \"estimatedDuration\": 10, \"materials\": [], \"thumbnail\": \"\", \"audioIntro\": \"\", \"videoIntro\": \"\", \"tags\": [], \"isActive\": \"ACTIVE\", \"createdBy\": \"\", \"updatedBy\": \"\" }"
+              "raw": "{\n  \"title\": \"Lesson 1\",\n  \"slug\": \"lesson-1\",\n  \"description\": \"Lesson description\",\n  \"type\": \"VOCABULARY\",\n  \"level\": \"A1\",\n  \"orderIndex\": 1,\n  \"unit\": \"\",\n  \"topic\": \"Topic\",\n  \"skillFocus\": \"VOCABULARY\",\n  \"content\": {\n    \"vocabulary\": {\n      \"words\": [\"apple\"],\n      \"definitions\": [\"A fruit\"],\n      \"images\": [],\n      \"audioFiles\": []\n    },\n    \"exercises\": []\n  },\n  \"locked\": false,\n  \"estimatedDuration\": 10,\n  \"materials\": [],\n  \"thumbnail\": \"\",\n  \"audioIntro\": \"\",\n  \"videoIntro\": \"\",\n  \"tags\": [],\n  \"isActive\": \"ACTIVE\",\n  \"createdBy\": \"\",\n  \"updatedBy\": \"\"\n}"
             }
           }
         },
@@ -623,9 +862,21 @@
           "name": "Update Lesson",
           "request": {
             "method": "PATCH",
-            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/lessons/:id",
-            "body": { "mode": "raw", "raw": "{ \"description\": \"Updated\" }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated\"\n}"
+            }
           }
         },
         {
@@ -653,10 +904,20 @@
           "name": "Create Invitation Code",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/invitation-codes",
             "body": {
               "mode": "raw",
-              "raw": "{ \"code\": \"ABC123\", \"event\": \"launch\", \"description\": \"\", \"type\": \"trial\", \"totalUses\": 10, \"usesLeft\": 10, \"startedAt\": \"2024-01-01T00:00:00Z\", \"expiredAt\": \"2024-12-31T00:00:00Z\", \"isSystem\": true, \"isActive\": true, \"createdBy\": \"\" }"
+              "raw": "{\n  \"code\": \"ABC123\",\n  \"event\": \"launch\",\n  \"description\": \"Invitation code description\",\n  \"type\": \"trial\",\n  \"totalUses\": 10,\n  \"usesLeft\": 10,\n  \"startedAt\": \"2024-01-01T00:00:00Z\",\n  \"expiredAt\": \"2024-12-31T00:00:00Z\",\n  \"isSystem\": true,\n  \"isActive\": true,\n  \"createdBy\": \"\"\n}"
             }
           }
         }
@@ -669,10 +930,20 @@
           "name": "Create History Invitation",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/history-invitations",
             "body": {
               "mode": "raw",
-              "raw": "{ \"userId\": \"\", \"code\": \"ABC123\", \"invitedAt\": \"2024-01-01T00:00:00Z\", \"status\": \"accepted\" }"
+              "raw": "{\n  \"userId\": \"\",\n  \"code\": \"ABC123\",\n  \"invitedAt\": \"2024-01-01T00:00:00Z\",\n  \"status\": \"accepted\"\n}"
             }
           }
         }
@@ -724,39 +995,102 @@
           "name": "Create Badge",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/badges",
             "body": {
               "mode": "raw",
-              "raw": "{ \"name\": \"Streak 7\", \"description\": \"7 day streak\", \"iconUrl\": \"https://...\", \"type\": \"streak\", \"level\": 1, \"criteria\": \"7-day streak\", \"isActive\": true }"
+              "raw": "{\n  \"name\": \"Streak 7\",\n  \"description\": \"7 day streak\",\n  \"iconUrl\": \"https://example.com/icon.png\",\n  \"type\": \"streak\",\n  \"level\": 1,\n  \"criteria\": \"7-day streak\",\n  \"isActive\": true\n}"
             }
           }
         },
         {
           "name": "List Badges",
-          "request": { "method": "GET", "url": "{{baseUrl}}/badges" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/badges"
+          }
         },
         {
           "name": "Get Badge",
-          "request": { "method": "GET", "url": "{{baseUrl}}/badges/:id" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/badges/:id"
+          }
         },
         {
           "name": "Update Badge",
           "request": {
             "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/badges/:id",
-            "body": { "mode": "raw", "raw": "{ \"description\": \"Updated\" }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated\"\n}"
+            }
           }
         },
         {
           "name": "Delete Badge",
-          "request": { "method": "DELETE", "url": "{{baseUrl}}/badges/:id" }
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/badges/:id"
+          }
         },
         {
           "name": "Patch Badge",
           "request": {
             "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/badges/:id",
-            "body": { "mode": "raw", "raw": "{}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
           }
         }
       ]
@@ -886,10 +1220,67 @@
           "name": "Create Assignment",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
             "url": "{{baseUrl}}/assignments",
             "body": {
-              "mode": "raw",
-              "raw": "{ \"title\": \"Homework 1\", \"description\": \"\", \"type\": \"quiz\", \"lessonId\": \"\", \"classId\": \"\", \"dueDate\": \"2024-01-30T00:00:00Z\", \"maxScore\": 10, \"attachments\": [], \"createdBy\": \"\", \"isPublished\": true }"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Homework 1",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Assignment description",
+                  "type": "text"
+                },
+                {
+                  "key": "type",
+                  "value": "quiz",
+                  "type": "text"
+                },
+                {
+                  "key": "lessonId",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "classId",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "dueDate",
+                  "value": "2024-01-30T00:00:00Z",
+                  "type": "text"
+                },
+                {
+                  "key": "maxScore",
+                  "value": "10",
+                  "type": "text"
+                },
+                {
+                  "key": "createdBy",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "isPublished",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
             }
           }
         },
@@ -897,15 +1288,42 @@
           "name": "Update Assignment",
           "request": {
             "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/assignments/:id",
-            "body": { "mode": "raw", "raw": "{ \"description\": \"Updated\" }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated\",\n  \"updatedBy\": \"\"\n}"
+            }
           }
         },
         {
           "name": "Delete Assignment",
           "request": {
             "method": "DELETE",
-            "url": "{{baseUrl}}/assignments/:id"
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/assignments/:id",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"updatedBy\": \"\"\n}"
+            }
           }
         },
         {
@@ -916,6 +1334,12 @@
           "name": "By Class",
           "request": {
             "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
             "url": "{{baseUrl}}/assignments/class/:classId"
           }
         },
@@ -923,6 +1347,12 @@
           "name": "By Lesson",
           "request": {
             "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
             "url": "{{baseUrl}}/assignments/lesson/:lessonId"
           }
         },
@@ -930,12 +1360,27 @@
           "name": "By User",
           "request": {
             "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
             "url": "{{baseUrl}}/assignments/user/:userId"
           }
         },
         {
           "name": "List Assignments",
-          "request": { "method": "GET", "url": "{{baseUrl}}/assignments" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/assignments"
+          }
         }
       ]
     },
@@ -1013,39 +1458,102 @@
           "name": "Create Package",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/packages",
             "body": {
               "mode": "raw",
-              "raw": "{ \"name\": \"Basic\", \"description\": \"\", \"type\": \"basic\", \"durationInDays\": 30, \"price\": 100000, \"currency\": \"VND\", \"features\": [\"feature1\"], \"isActive\": true, \"createdBy\": \"\" }"
+              "raw": "{\n  \"name\": \"Basic\",\n  \"description\": \"Basic package\",\n  \"type\": \"basic\",\n  \"durationInDays\": 30,\n  \"price\": 100000,\n  \"currency\": \"VND\",\n  \"features\": [\"feature1\"],\n  \"isActive\": true,\n  \"createdBy\": \"\"\n}"
             }
           }
         },
         {
           "name": "Get Package",
-          "request": { "method": "GET", "url": "{{baseUrl}}/packages/:id" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/packages/:id"
+          }
         },
         {
           "name": "List Packages",
-          "request": { "method": "GET", "url": "{{baseUrl}}/packages" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/packages"
+          }
         },
         {
           "name": "Update Package",
           "request": {
             "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/packages/:id",
-            "body": { "mode": "raw", "raw": "{ \"description\": \"Updated\" }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated\"\n}"
+            }
           }
         },
         {
           "name": "Delete Package",
-          "request": { "method": "DELETE", "url": "{{baseUrl}}/packages/:id" }
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/packages/:id"
+          }
         },
         {
           "name": "Duplicate Package",
           "request": {
             "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/packages/:id",
-            "body": { "mode": "raw", "raw": "{}" }
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
           }
         }
       ]
@@ -1256,32 +1764,82 @@
           "name": "Create Progress",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/progresses",
             "body": {
               "mode": "raw",
-              "raw": "{ \"userId\": \"\", \"lessonId\": \"\", \"progress\": 50 }"
+              "raw": "{\n  \"userId\": \"\",\n  \"lessonId\": \"\",\n  \"progress\": 50\n}"
             }
           }
         },
         {
           "name": "List Progresses",
-          "request": { "method": "GET", "url": "{{baseUrl}}/progresses" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/progresses"
+          }
         },
         {
           "name": "Get Progress",
-          "request": { "method": "GET", "url": "{{baseUrl}}/progresses/:id" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/progresses/:id"
+          }
         },
         {
           "name": "Update Progress",
           "request": {
             "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/progresses/:id",
-            "body": { "mode": "raw", "raw": "{ \"progress\": 70 }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"progress\": 70\n}"
+            }
           }
         },
         {
           "name": "Delete Progress",
-          "request": { "method": "DELETE", "url": "{{baseUrl}}/progresses/:id" }
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/progresses/:id"
+          }
         }
       ]
     },
@@ -1331,33 +1889,80 @@
           "name": "Create Notification",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/notifications",
             "body": {
               "mode": "raw",
-              "raw": "{ \"title\": \"Title\", \"message\": \"Body\" }"
+              "raw": "{\n  \"title\": \"Title\",\n  \"message\": \"Body\"\n}"
             }
           }
         },
         {
           "name": "List Notifications",
-          "request": { "method": "GET", "url": "{{baseUrl}}/notifications" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/notifications"
+          }
         },
         {
           "name": "Get Notification",
-          "request": { "method": "GET", "url": "{{baseUrl}}/notifications/:id" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/notifications/:id"
+          }
         },
         {
           "name": "Update Notification",
           "request": {
             "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/notifications/:id",
-            "body": { "mode": "raw", "raw": "{ \"read\": true }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"read\": true\n}"
+            }
           }
         },
         {
           "name": "Delete Notification",
           "request": {
             "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
             "url": "{{baseUrl}}/notifications/:id"
           }
         }
@@ -1370,30 +1975,80 @@
           "name": "Create Competition",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/competitions",
-            "body": { "mode": "raw", "raw": "{ \"name\": \"Contest\" }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Contest\"\n}"
+            }
           }
         },
         {
           "name": "List Competitions",
-          "request": { "method": "GET", "url": "{{baseUrl}}/competitions" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/competitions"
+          }
         },
         {
           "name": "Get Competition",
-          "request": { "method": "GET", "url": "{{baseUrl}}/competitions/:id" }
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{baseUrl}}/competitions/:id"
+          }
         },
         {
           "name": "Update Competition",
           "request": {
             "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/competitions/:id",
-            "body": { "mode": "raw", "raw": "{ \"name\": \"Updated\" }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated\"\n}"
+            }
           }
         },
         {
           "name": "Delete Competition",
           "request": {
             "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
             "url": "{{baseUrl}}/competitions/:id"
           }
         }
@@ -1403,11 +2058,24 @@
       "name": "Packages Cloudflare",
       "item": [
         {
-          "name": "Upload R2",
+          "name": "Get Signed Upload URL",
           "request": {
             "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": "{{baseUrl}}/cloudflare",
-            "body": { "mode": "raw", "raw": "{ \"file\": \"<base64>\" }" }
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filename\": \"example.jpg\",\n  \"contentType\": \"image/jpeg\"\n}"
+            }
           }
         }
       ]

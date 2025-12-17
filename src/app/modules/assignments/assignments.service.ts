@@ -18,7 +18,7 @@ export class AssignmentsService {
     private assignmentModel: Model<AssignmentDocument>,
     private usersService: UsersService,
     private cloudflareService: CloudflareService,
-  ) {}
+  ) { }
 
   async create(createAssignmentDto: CreateAssignmentDto, file?: any) {
     const user = await this.usersService.findUserById(
@@ -43,13 +43,12 @@ export class AssignmentsService {
     let attachmentUrl: string | null = null;
 
     if (file) {
-      const key = `assignments/${Date.now()}-${file.originalname}`;
-
-      await this.cloudflareService.create({
-        filename: file.originalname,
-        contentType: file.mimetype,
-      });
-      attachmentUrl = `${process.env.CF_PUBLIC_URL}/${key}`;
+      // Upload file trực tiếp lên Cloudflare R2
+      const uploadResult = await this.cloudflareService.uploadFile(
+        file,
+        'assignments',
+      );
+      attachmentUrl = uploadResult.fileUrl;
     }
     const assignment = new this.assignmentModel({
       ...createAssignmentDto,

@@ -36,6 +36,7 @@ import { MongoDBModule } from './app/configs/database/mongodb.config';
 import { CloudflareModule } from './app/modules/cloudflare/cloudflare.module';
 import { PurchasesModule } from './app/modules/purchases/purchases.module';
 import { RedisModule } from './app/configs/redis/redis.module';
+import { PronunciationsModule } from './app/modules/pronunciations/pronunciations.module';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { RedisModule } from './app/configs/redis/redis.module';
     CloudflareModule,
     PurchasesModule,
     RedisModule,
+    PronunciationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

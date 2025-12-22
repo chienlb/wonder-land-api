@@ -69,6 +69,8 @@ export const envSchema = z.object({
   R2_BUCKET: z.string().optional(),
   R2_PUBLIC_BASE: z.string().optional(),
   OPEN_ROUTER_API: z.string().optional(),
+  AZURE_SPEECH_KEY: z.string().optional(),
+  AZURE_SPEECH_REGION: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

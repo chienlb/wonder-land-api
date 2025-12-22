@@ -110,11 +110,16 @@ async function bootstrap(): Promise<void> {
 
   app.enableShutdownHooks();
 
+  // Build API base path from prefix and version
+  const apiPrefix = String(env.API_PREFIX).replace(/^\/+|\/+$/g, '');
+  const apiVersion = String(env.API_VERSION).replace(/^\/+|\/+$/g, '');
+  const apiBasePath = `/${apiPrefix}/${apiVersion}`;
+
   const config = new DocumentBuilder()
     .setTitle(env.SWAGGER_TITLE)
     .setDescription(env.SWAGGER_DESCRIPTION)
     .setVersion(env.SWAGGER_VERSION)
-    .addServer('/api/v1')
+    .addServer(apiBasePath)
     .addTag(env.SWAGGER_TAG)
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();

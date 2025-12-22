@@ -1,6 +1,7 @@
 import { IsString, IsOptional, IsEnum, IsNumber, IsArray, IsBoolean, IsUrl } from 'class-validator';
 import { Types } from 'mongoose';
 import { BadgeType } from '../schema/badge.schema';
+import { Transform } from 'class-transformer';
 
 export class CreateBadgeDto {
     @IsString()
@@ -9,12 +10,13 @@ export class CreateBadgeDto {
     @IsString()
     description: string; // Mô tả
 
-    @IsUrl()
+    @IsOptional()
     iconUrl: string; // Icon huy hiệu
 
     @IsEnum(BadgeType)
     type: BadgeType; // Loại huy hiệu
 
+    @Transform(({ value }) => Number(value))
     @IsOptional()
     @IsNumber()
     level?: number; // Cấp độ 1–3
@@ -34,6 +36,7 @@ export class CreateBadgeDto {
     @IsArray()
     givenTo?: Types.ObjectId[]; // Danh sách user đã nhận
 
+    @Transform(({ value }) => value === 'true')
     @IsBoolean()
     isActive: boolean; // Còn hiệu lực?
 

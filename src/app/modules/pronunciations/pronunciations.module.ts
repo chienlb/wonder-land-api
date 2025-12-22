@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PronunciationsController } from './pronunciations.controller';
-import { PronunciationsService } from './pronunciations.service';
+import { PronunciationController } from './pronunciations.controller';
+import { PronunciationService } from './pronunciations.service';
 import {
   PronunciationExercise,
   PronunciationExerciseSchema,
@@ -20,8 +20,8 @@ import { CloudflareModule } from '../cloudflare/cloudflare.module';
     ]),
     CloudflareModule,
   ],
-  controllers: [PronunciationsController],
-  providers: [PronunciationsService],
-  exports: [PronunciationsService],
+  controllers: [PronunciationController],
+  providers: [PronunciationService],
+  exports: [PronunciationService],
 })
 export class PronunciationsModule { }

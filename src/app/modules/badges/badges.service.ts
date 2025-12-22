@@ -6,6 +6,7 @@ import { UsersService } from '../users/users.service';
 import { CreateBadgeDto } from './dto/create-badge.dto';
 import { UpdateBadgeDto } from './dto/update-badge.dto';
 import { RedisService } from 'src/app/configs/redis/redis.service';
+import { CloudflareService } from '../cloudflare/cloudflare.service';
 
 @Injectable()
 export class BadgesService {
@@ -13,33 +14,45 @@ export class BadgesService {
     @InjectModel(Badge.name) private badgeModel: Model<BadgeDocument>,
     private usersService: UsersService,
     private readonly redisService: RedisService,
+    private readonly cloudflareService: CloudflareService,
   ) { }
 
-  async createBadge(createBadgeDto: CreateBadgeDto): Promise<BadgeDocument> {
+  async createBadge(
+    createBadgeDto: CreateBadgeDto,
+    file?: any,
+  ): Promise<BadgeDocument> {
     try {
+      if (file) {
+        const uploadResult = await this.cloudflareService.uploadFile(
+          file,
+          'badges/icons',
+        );
+        createBadgeDto.iconUrl = uploadResult.fileUrl;
+      }
+  
       const existingBadge = await this.badgeModel.findOne({
         name: createBadgeDto.name,
       });
       if (existingBadge) {
         throw new BadRequestException('Badge already exists');
       }
-
+  
       const user = await this.usersService.findUserById(
         createBadgeDto.createdBy?.toString() || '',
       );
       if (!user) {
         throw new BadRequestException('User not found');
       }
-
+  
       createBadgeDto.createdBy = user._id;
       createBadgeDto.updatedBy = user._id;
-
+  
       return await this.badgeModel.create(createBadgeDto);
     } catch (error) {
       throw new BadRequestException(error.message);
     }
   }
-
+  
   async findAllBadges(
     page: number,
     limit: number,

@@ -13,12 +13,14 @@ import {
   PronunciationExerciseDocument,
 } from './schema/pronunciation-exercise.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CloudflareService } from '../cloudflare/cloudflare.service';
 import { UsersService } from '../users/users.service';
 import { LessonsService } from '../lessons/lessons.service';
 import { UnitsService } from '../units/units.service';
 import { UpdatePronunciationExerciseDto } from './dto/update-pronunciation-exercise.dto';
+import { SubmitPronunciationAttemptDto } from './dto/submit-pronunciation-attempt.dto';
+import { PronunciationAttempt, PronunciationAttemptDocument, PronunciationAttemptStatus } from './schema/pronunciation-attempt.schema';
 
 const env = envSchema.parse(process.env);
 
@@ -33,13 +35,15 @@ export class PronunciationService {
   constructor(
     @InjectModel(PronunciationExercise.name)
     private pronunciationExerciseModel: Model<PronunciationExerciseDocument>,
+    @InjectModel(PronunciationAttempt.name)
+    private pronunciationAttemptModel: Model<PronunciationAttemptDocument>,
     private cloudflareService: CloudflareService,
     private usersService: UsersService,
     private lessonService: LessonsService,
     private unitsService: UnitsService,
   ) { }
 
-  async assessShortAudio(input: AssessInput) {
+  async assessShortAudio(input: AssessInput, userId: string, exerciseId: string) {
     console.log('env');
     console.log(env.AZURE_SPEECH_REGION);
     console.log(env.AZURE_SPEECH_KEY);
@@ -108,6 +112,25 @@ export class PronunciationService {
     }
 
     const best = json?.NBest?.[0];
+
+    const pronunciationAttempt = await this.pronunciationAttemptModel.create({
+      userId: new Types.ObjectId(userId),
+      exerciseId: new Types.ObjectId(exerciseId),
+      userAudio: '',
+      audioDuration: 0,
+      score: 0,
+      accuracy: 0,
+      fluency: 0,
+      completeness: 0,
+      overallScore: 0,
+      feedback: '',
+      wordLevelFeedback: [],
+      phonemeFeedback: [],
+      status: PronunciationAttemptStatus.PENDING,
+      attemptNumber: 1,
+      isPassed: false,
+      timeSpent: 0,
+    });
 
     return {
       status: json?.RecognitionStatus,

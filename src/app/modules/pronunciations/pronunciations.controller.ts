@@ -119,6 +119,8 @@ export class PronunciationController {
   async assess(
     @UploadedFile() file: any,
     @Body() assessDto: AssessPronunciationDto,
+    @Req() req: any,
+    @Param('exerciseId') exerciseId: string,
   ) {
     if (!file?.buffer) {
       throw new BadRequestException('Missing audio file (field: audio)');
@@ -131,7 +133,7 @@ export class PronunciationController {
       audioBuffer: file.buffer,
       referenceText: assessDto.referenceText.trim(),
       language: assessDto.language || 'en-US',
-    });
+    }, req.user.userId, exerciseId);
   }
 
   @Post('create')
